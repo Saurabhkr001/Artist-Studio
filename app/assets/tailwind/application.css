@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* Base dark gallery theme */
+body {
+  background-color: #16130f;
+  color: #f0e6d3;
+  font-family: "DM Sans", sans-serif;
+}
+
+nav {
+  background-color: #1f1b16;
+  border-bottom: 1px solid #2a251e;
+}
+
+nav a, nav span {
+  color: #a89880;
+}
+
+nav a:hover {
+  color: #f0e6d3;
+}
+
+footer {
+  border-top: 1px solid #2a251e;
+  color: #a89880;
+}
+
+/* Cards */
+.card {
+  background-color: #1f1b16;
+  border: 1px solid #2a251e;
+  border-radius: 1rem;
+}
+
+/* Override Tailwind whites and light grays */
+.bg-white { background-color: #1f1b16 !important; }
+.bg-stone-50 { background-color: #16130f !important; }
+.bg-stone-100 { background-color: #2a251e !important; }
+.bg-stone-200 { background-color: #33291f !important; }
+.text-stone-900 { color: #f0e6d3 !important; }
+.text-stone-800 { color: #e8dcc8 !important; }
+.text-stone-700 { color: #d4c5ae !important; }
+.text-stone-600 { color: #c4b49e !important; }
+.text-stone-500 { color: #a89880 !important; }
+.text-stone-400 { color: #8a7a65 !important; }
+.border-stone-200 { border-color: #2a251e !important; }
+.border-stone-300 { border-color: #33291f !important; }
+
+/* Ochre accent */
+.bg-stone-900 { background-color: #c4933f !important; }
+.hover\:bg-stone-700:hover { background-color: #a37830 !important; }
+.text-white { color: #16130f !important; }
+
+/* Headings */
+h1, h2, h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+/* Stat cards */
+.bg-amber-50 { background-color: #2a231a !important; }
+.border-amber-200 { border-color: #5a3e1b !important; }
+.text-amber-900 { color: #f0d080 !important; }
+.text-amber-700 { color: #d4aa50 !important; }
+
+/* Status badges */
+.bg-emerald-100 { background-color: #1a2e22 !important; }
+.text-emerald-700 { color: #6ab87a !important; }
+.bg-blue-100 { background-color: #1a2030 !important; }
+.text-blue-700 { color: #6a90d8 !important; }
+
+/* Focus rings */
+.focus\:ring-stone-400:focus { --tw-ring-color: #c4933f !important; }
+
+/* Devise form colors */
+.bg-canvas { background-color: #16130f; }
+.bg-canvas2 { background-color: #1f1b16; }
+.border-canvas3 { border-color: #2a251e; }
+.text-cream { color: #f0e6d3; }
+.text-ochre { color: #c4933f; }
+.bg-ochre { background-color: #c4933f; }
+.bg-ochre2 { background-color: #a37830; }
+.text-canvas { color: #16130f; }
+.hover\:bg-ochre2:hover { background-color: #a37830; }
+.hover\:text-ochre:hover { color: #c4933f; }
+.focus\:border-ochre:focus { border-color: #c4933f; }
+.font-display { font-family: "Cormorant Garamond", Georgia, serif; }
+.placeholder-stone-600::placeholder { color: #57534e; }
+
+/* Thin white border on all artwork images */
+.art-card img,
+.art-card-image img,
+.artwork-image img {
+  border: 1px solid rgb(255, 255, 255);
+}
+
+/* Artwork image frame — separates painting from dark background */
+.artwork-frame {
+  border: 1px solid rgb(255, 255, 255);
+}

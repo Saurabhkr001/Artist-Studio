@@ -1,0 +1,155 @@
+<div class="raw-mode">
+
+  <%# HERO %>
+  <div class="raw-hero">
+    <div class="raw-hero-bg">
+      <% if @user.cover_image.attached? %>
+        <%= image_tag @user.cover_image, alt: "Cover Photo" %>
+      <% elsif @artworks.first&.images&.attached? %>
+        <%= image_tag @artworks.first.images.first, alt: "" %>
+      <% end %>
+    </div>
+    <div class="raw-hero-grid"></div>
+    <div class="raw-hero-content">
+      <div style="display: flex; flex-wrap: wrap-reverse; align-items: center; gap: clamp(2rem, 5vw, 4rem); width: 100%;">
+        <div style="flex: 1 1 min(100%, 300px);">
+          <p class="raw-eyebrow">Fine Art · Portfolio · <%= Date.today.year %></p>
+          
+          <div class="raw-hero-name animate-slide-up" id="raw-hero-name" style="margin-top: 1rem;"><%= @user.display_name.upcase %></div>
+          
+          <p style="max-width: 650px; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-top: 1.5rem; line-height: 1.7;">
+            A contemporary fine artist specializing in evocative abstract and figurative works. 
+            Exploring themes of memory, identity, and the intersection of nature and human emotion 
+            through textured layers of oil and acrylic on canvas.
+          </p>
+
+          <div class="raw-hero-sub">
+            <div class="raw-hero-stat">
+              <div class="raw-hero-stat-num"><%= @pagy.count.to_s.rjust(2,'0') %></div>
+              <div class="raw-hero-stat-lbl">Works</div>
+            </div>
+            <% avail2 = @user.artworks.publicly_visible.available.count %>
+            <div class="raw-hero-stat">
+              <div class="raw-hero-stat-num"><%= avail2.to_s.rjust(2,'0') %></div>
+              <div class="raw-hero-stat-lbl">Available</div>
+            </div>
+            <div class="raw-hero-stat">
+              <div class="raw-hero-stat-num"><%= @user.artworks.publicly_visible.where.not(medium:nil).pluck(:medium).uniq.count.to_s.rjust(2,'0') %></div>
+              <div class="raw-hero-stat-lbl">Mediums</div>
+            </div>
+            <div class="raw-scroll-hint">
+              <div class="raw-scroll-line"></div>
+              <span>Scroll to explore</span>
+            </div>
+          </div>
+        </div>
+        
+        <% if @user.avatar.attached? %>
+          <div style="flex: 1 1 min(100%, 200px); display: flex; justify-content: center;">
+            <div style="width: 100%; max-width: min(100vw - 4rem, 400px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;">
+              <%= image_tag @user.avatar, style: "width: 100%; height: 100%; object-fit: cover;", alt: @user.display_name %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# MARQUEE %>
+  <div class="raw-marquee-wrap">
+    <div class="raw-marquee" id="raw-marquee">
+      <% 4.times do %>
+        <span class="raw-marquee-item">Fine Art</span>
+        <span class="raw-marquee-item">Painting</span>
+        <span class="raw-marquee-item">Studio Archive</span>
+        <span class="raw-marquee-item"><%= @user.display_name.upcase %></span>
+        <span class="raw-marquee-item"><%= Date.today.year %></span>
+        <span class="raw-marquee-item">Original Works</span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# BENTO GRID %>
+  <div class="raw-grid-section" id="works">
+    <div class="raw-section-header">
+      <span class="raw-section-num">01</span>
+      <span class="raw-section-title">Selected Works</span>
+    </div>
+    <% if @artworks.any? %>
+      <div class="raw-bento" id="raw-bento">
+        <% @artworks.each_with_index do |artwork, i| %>
+          <%= link_to portfolio_artwork_path(artwork.slug), class: "raw-bento-item", id: "bento-#{i}" do %>
+            <% if artwork.images.attached? %>
+              <%= image_tag artwork.images.first, class: "artwork-frame", alt: artwork.title %>
+            <% else %>
+              <div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.1);font-size:0.7rem;">no image</div>
+            <% end %>
+            <div class="raw-bento-overlay">
+              <div class="raw-bento-num"><%= "0#{i+1}".last(2) %></div>
+              <div class="raw-bento-title"><%= artwork.title.upcase %></div>
+              <div class="raw-bento-meta"><%= [artwork.medium, artwork.year_created].compact.join(" · ") %></div>
+            </div>
+            <div class="raw-bento-view">View →</div>
+            <% if artwork.available? %><div class="raw-available"></div><% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# SECOND MARQUEE - reverse %>
+  <div class="raw-marquee-wrap">
+    <div class="raw-marquee" style="animation-direction:reverse;animation-duration:25s;">
+      <% 4.times do %>
+        <span class="raw-marquee-item">Original Paintings</span>
+        <span class="raw-marquee-item">Oil · Acrylic · Watercolour</span>
+        <span class="raw-marquee-item">Gallery Quality</span>
+        <span class="raw-marquee-item">Available Worldwide</span>
+        <span class="raw-marquee-item">Commission Welcome</span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ABOUT %>
+  <% if @user.artist_statement.present? || @user.contact_email.present? %>
+    <div class="raw-about" id="about">
+      <div>
+        <p class="raw-about-label">About the Artist</p>
+        <h2 class="raw-about-name"><%= @user.display_name.upcase %></h2>
+        <% if @user.artist_statement.present? %>
+          <p class="raw-about-text"><%= @user.artist_statement %></p>
+        <% end %>
+      </div>
+      <div style="padding-top:4rem;">
+        <p class="raw-about-label">Studio · Enquiries</p>
+        <p style="font-family:'DM Mono',monospace;font-size:0.8rem;color:rgba(255,255,255,0.35);line-height:2;margin-bottom:2rem;">For sales enquiries, exhibition proposals, commissions, and press opportunities.</p>
+        <% if @user.contact_email.present? %>
+          <a href="mailto:<%= @user.contact_email %>" class="raw-contact-btn">
+            <%= @user.contact_email %>
+            <span class="btn-arrow">→</span>
+          </a>
+        <% end %>
+        <div style="margin-top:3rem;display:grid;gap:0.75rem;">
+          <% Artwork.statuses.keys.each do |s| %>
+            <% cnt = @user.artworks.publicly_visible.public_send(s).count %>
+            <% next if cnt == 0 %>
+            <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'DM Mono',monospace;font-size:0.65rem;">
+              <span style="color:rgba(255,255,255,0.2);letter-spacing:0.1em;text-transform:uppercase;"><%= s.humanize %></span>
+              <span style="color:rgba(255,255,255,0.5);"><%= cnt.to_s.rjust(2,'0') %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%# RAW FOOTER %>
+  <footer class="raw-footer">
+    <span class="raw-footer-name"><%= @user.display_name.upcase %></span>
+    <span class="raw-footer-copy">All works &copy; <%= Date.today.year %> · All rights reserved</span>
+    <% if @user.contact_email.present? %>
+      <a href="mailto:<%= @user.contact_email %>" style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em;"><%= @user.contact_email %></a>
+    <% end %>
+  </footer>
+
+</div><%# end raw-mode %>

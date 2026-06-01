@@ -1,0 +1,117 @@
+<section class="classic-hero" style="position: relative;">
+  <% if @user.cover_image.attached? %>
+    <div style="position: absolute; inset: 0; z-index: 0; background-image: url('<%= url_for(@user.cover_image) %>'); background-size: cover; background-position: center; opacity: 0.15; pointer-events: none;"></div>
+  <% end %>
+  <div style="position: relative; z-index: 1;">
+    <p class="discipline">Fine Art · Painting</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(1.5rem, 4vw, 2.5rem);margin-bottom:1.5rem;width:100%;">
+      <% if @user.avatar.attached? %>
+        <div style="flex: 1 1 min(100%, 300px); display: flex; justify-content: center;">
+          <div style="width:100%;max-width:200px;aspect-ratio:1;border-radius:50%;overflow:hidden;border:1px solid var(--border2);flex-shrink:0;box-shadow:0 0 0 3px var(--bg),0 0 0 4px var(--border2);">
+            <%= image_tag @user.avatar,
+                style: "width:100%;height:100%;object-fit:cover;",
+                alt: @user.display_name %>
+          </div>
+        </div>
+      <% end %>
+      <div style="flex: 1 1 min(100%, 300px);">
+        <h1 style="margin-bottom: 0.5rem;"><%= @user.display_name %></h1>
+        <% if @user.artist_statement.present? %>
+          <p class="statement" id="about" style="margin: 0;"><%= @user.artist_statement %></p>
+        <% end %>
+      </div>
+    </div>
+    <div class="gold-line"></div>
+  </div>
+  <div style="position: relative; z-index: 1;">
+    <div class="hero-stats">
+      <div><div class="stat-num"><%= @pagy.count %></div><div class="stat-label">Works</div></div>
+      <% avail = @user.artworks.publicly_visible.available.count %>
+      <% if avail > 0 %>
+        <div><div class="stat-num"><%= avail %></div><div class="stat-label">Available</div></div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<div class="filter-bar" id="works">
+  <span class="filter-label">Filter</span>
+  <a href="<%= portfolio_path %>" class="filter-btn <%= params[:status].blank? && params[:tag].blank? ? 'active' : '' %>">All</a>
+  <a href="<%= portfolio_path(status: 'available') %>" class="filter-btn <%= params[:status] == 'available' ? 'active' : '' %>">Available</a>
+  <a href="<%= portfolio_path(status: 'sold') %>" class="filter-btn <%= params[:status] == 'sold' ? 'active' : '' %>">Sold</a>
+  <a href="<%= portfolio_path(status: 'exhibited') %>" class="filter-btn <%= params[:status] == 'exhibited' ? 'active' : '' %>">Exhibited</a>
+  <% if @all_tags.any? %>
+    <span style="width:1px;height:14px;background:var(--border2);"></span>
+    <% @all_tags.each do |tag| %>
+      <a href="<%= portfolio_path(tag: tag.name) %>" class="filter-btn <%= params[:tag] == tag.name ? 'active' : '' %>">#<%= tag.name %></a>
+    <% end %>
+  <% end %>
+  <% if params[:tag].present? || params[:status].present? %>
+    <a href="<%= portfolio_path %>" class="filter-btn">× clear</a>
+  <% end %>
+</div>
+
+<div class="classic-grid-wrap">
+  <% if @artworks.any? %>
+    <div class="masonry">
+      <% @artworks.each do |artwork| %>
+        <%= link_to portfolio_artwork_path(artwork.slug), class: "masonry-item" do %>
+          <div class="art-card">
+            <% if artwork.images.attached? %>
+              <%= image_tag artwork.images.first, class: "artwork-frame" %>
+            <% else %>
+              <div style="aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;background:#1a1612;"><span style="color:var(--dimmed);font-size:0.65rem;">no image</span></div>
+            <% end %>
+            <div class="art-overlay">
+              <% if artwork.medium.present? %><p class="overlay-category"><%= artwork.medium %></p><% end %>
+              <p class="overlay-title"><%= artwork.title %></p>
+              <p class="overlay-meta"><%= artwork.year_created %><% if artwork.dimensions_cm.present? %> · <%= artwork.dimensions_cm %> cm<% end %></p>
+              <% if artwork.available? %><div class="available-pill"><span class="available-dot"></span>Available</div><% end %>
+            </div>
+          </div>
+          <div class="card-caption">
+            <p class="caption-title"><%= artwork.title %></p>
+            <p class="caption-meta"><%= [artwork.medium, artwork.year_created].compact.join(" · ") %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <div style="text-align:center;padding:3rem 0;border-top:1px solid var(--border);margin-top:2rem;">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% else %>
+    <div style="text-align:center;padding:8rem 0;color:var(--dimmed);">
+      <p class="serif" style="font-size:2rem;font-style:italic;">The studio is quiet.</p>
+    </div>
+  <% end %>
+</div>
+
+<% if @user.artist_statement.present? || @user.contact_email.present? %>
+  <div class="about-section">
+    <% if @user.artist_statement.present? %>
+      <div>
+        <p style="font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;">About the Artist</p>
+        <h2 class="serif" style="font-size:3rem;font-style:italic;font-weight:300;line-height:1.1;margin-bottom:2rem;"><%= @user.display_name %></h2>
+        <div style="width:30px;height:1px;background:var(--gold);margin-bottom:2rem;"></div>
+        <p class="serif" style="font-size:1.15rem;font-weight:300;color:var(--cream2);line-height:1.9;font-style:italic;"><%= @user.artist_statement %></p>
+      </div>
+    <% end %>
+    <% if @user.contact_email.present? %>
+      <div style="padding-top:1rem;">
+        <p style="font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;">Get in Touch</p>
+        <p style="font-size:0.85rem;color:var(--muted);line-height:1.9;margin-bottom:2rem;">For sales, exhibition proposals, commissions, or press.</p>
+        <a href="mailto:<%= @user.contact_email %>" style="display:inline-block;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:0.8rem 1.8rem;transition:all 0.2s;"><%= @user.contact_email %> →</a>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<footer class="classic-footer">
+  <div class="serif" style="font-size:1rem;font-style:italic;color:var(--cream2);"><%= @user.display_name %></div>
+  <div style="text-align:center;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dimmed);">All works &copy; <%= Date.today.year %></div>
+  <div style="text-align:right;font-size:0.55rem;color:var(--dimmed);">
+    <% if @user.contact_email.present? %>
+      <a href="mailto:<%= @user.contact_email %>" style="color:var(--gold);"><%= @user.contact_email %></a>
+    <% end %>
+  </div>
+</footer>

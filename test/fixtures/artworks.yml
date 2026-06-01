@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  title: MyString
+  medium: MyString
+  dimensions_cm: MyString
+  year_created: 1
+  description: MyText
+  status: 1
+  is_public: false
+  slug: MyString
+  painted_on: 2026-05-10
+
+two:
+  user: two
+  title: MyString
+  medium: MyString
+  dimensions_cm: MyString
+  year_created: 1
+  description: MyText
+  status: 1
+  is_public: false
+  slug: MyString
+  painted_on: 2026-05-10

@@ -1,0 +1,584 @@
+  <style>
+    /* ── BASE RESET ── */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    :root {
+      --glow-color: #c4933f;
+      --glow-color-dark: #8a6020;
+      --glow-rgb: 196, 147, 63;
+    }
+
+    .auth-page-container {
+      min-height: 100vh;
+      background: #0d0d0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "DM Mono", monospace;
+      -webkit-font-smoothing: antialiased;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── LAMP CORD ── */
+    .lamp-cord {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(var(--glow-rgb), 0.5), transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── LAMP BULB ── */
+    .lamp-bulb {
+      position: fixed;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--glow-color);
+      box-shadow:
+        0 0 8px 3px rgba(var(--glow-rgb), 0.9),
+        0 0 20px 8px rgba(var(--glow-rgb), 0.5),
+        0 0 40px 16px rgba(var(--glow-rgb), 0.2);
+      z-index: 2;
+      pointer-events: none;
+      animation: bulbPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes bulbPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    /* ── LAMP CONE LIGHT ── */
+    .lamp-cone {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(
+        ellipse at center top,
+        rgba(var(--glow-rgb), 0.14) 0%,
+        rgba(var(--glow-rgb), 0.06) 30%,
+        rgba(var(--glow-rgb), 0.02) 55%,
+        transparent 70%
+      );
+      z-index: 0;
+      pointer-events: none;
+      animation: conePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes conePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+
+    /* ── FLOOR GLOW ── */
+    .floor-glow {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 150px;
+      background: radial-gradient(
+        ellipse at center bottom,
+        rgba(var(--glow-rgb), 0.06) 0%,
+        transparent 70%
+      );
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── PULL SWITCH ── */
+    .lamp-switch {
+      position: fixed;
+      top: 0;
+      /* Clamp so it never overflows: sits right of center card but stays on screen */
+      left: clamp(calc(50% + 160px), calc(50% + 260px), calc(100% - 48px));
+      /* Prevents overflow and stops switch from overlapping 400px card */
+      left: clamp(calc(50% + 220px), calc(50% + 260px), calc(100% - 48px));
+      width: 40px;
+      z-index: 50;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .lamp-switch .cord-line {
+      width: 2px;
+      height: 35vh;
+      background: rgba(255, 255, 255, 0.3);
+      transition: height 0.15s ease;
+    }
+    
+    .lamp-switch .cord-handle {
+      width: 6px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.4);
+    }
+    
+    .lamp-switch:hover .cord-line { background: rgba(255, 255, 255, 0.5); }
+    .lamp-switch:hover .cord-handle { background: rgba(255, 255, 255, 0.6); }
+    .lamp-switch:active .cord-line { height: calc(35vh + 20px); }
+
+    @media (max-width: 500px) {
+      .lamp-switch {
+        left: auto;
+        right: 1rem;
+      }
+    }
+
+    /* ── LAMP OFF STATE ── */
+    .auth-page-container.lamp-off { background: #040405; }
+    .auth-page-container.lamp-off .lamp-cord { background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent); }
+    .auth-page-container.lamp-off .lamp-bulb { background: #111; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.8); animation: none; }
+    .auth-page-container.lamp-off .lamp-cone, .auth-page-container.lamp-off .floor-glow { opacity: 0 !important; animation: none; }
+
+    .lamp-bulb, .lamp-cone, .floor-glow, .lamp-cord { transition: all 0.5s ease; }
+
+    /* ── NOISE TEXTURE ── */
+    .auth-page-container::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/feTurbulence%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── CARD WRAPPER ── */
+    .card-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 0; /* FIX: vertical breathing room on short viewports */
+      transition: opacity 0.6s ease, filter 0.6s ease;
+    }
+    
+    .auth-page-container.lamp-off .card-wrapper {
+      opacity: 0.05;
+      pointer-events: none;
+      filter: grayscale(1) blur(2px);
+    }
+
+    /* ── CARD ── */
+    .card {
+      width: 100%;
+      max-width: 420px; /* FIX: slightly narrower for better proportion */
+      margin: 0 1.25rem; /* FIX: consistent horizontal margin */
+      padding: 2.75rem 2.5rem; /* FIX: balanced padding — not too tall, not cramped */
+      max-width: 400px;
+      margin: 0 1rem;
+      padding: 2.25rem 2rem;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(var(--glow-rgb), 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      animation: cardRise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes cardRise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HEADER ── */
+    .card-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 2.1rem;
+      font-size: 1.8rem;
+      font-style: italic;
+      font-weight: 300;
+      color: #f0e6d3;
+      line-height: 1;
+      margin-bottom: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-sub {
+      font-size: 0.6rem; /* FIX: slightly more readable */
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(240, 230, 211, 0.25);
+    }
+
+    /* ── LABELS ── */
+    label {
+      display: block;
+      font-size: 0.6rem; /* FIX: more legible label size */
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(240, 230, 211, 0.4);
+      margin-bottom: 0.45rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── INPUTS ── */
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px; /* FIX: consistent radius smaller than card */
+      padding: 0.85rem 1.1rem; /* FIX: comfortable but not oversized */
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #f0e6d3;
+      font-family: "DM Mono", monospace;
+      font-size: 0.82rem;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+      -webkit-appearance: none;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      border-color: rgba(var(--glow-rgb), 0.4);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow:
+        0 0 0 3px rgba(var(--glow-rgb), 0.08),
+        0 0 15px rgba(var(--glow-rgb), 0.05);
+    }
+
+    input::placeholder { color: rgba(240, 230, 211, 0.2); }
+
+    /* ── FIELD GROUPS ── */
+    .field { margin-bottom: 0.85rem; } /* FIX: tighter gap between fields */
+    .field { margin-bottom: 1rem; }
+    .field:last-of-type { margin-bottom: 0; }
+    .fields { margin-bottom: 1.1rem; } /* FIX: tighter section gap */
+    .fields { margin-bottom: 1.25rem; }
+
+    /* ── REMEMBER ME ── */
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.62rem; /* FIX: slightly more readable */
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: rgba(240, 230, 211, 0.35);
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.04);
+      accent-color: var(--glow-color);
+      cursor: pointer;
+      flex-shrink: 0; /* FIX: prevent checkbox from collapsing */
+    }
+
+    .forgot-link {
+      font-size: 0.6rem; /* FIX: matches remember-label size */
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: rgba(240, 230, 211, 0.28);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover { color: rgba(var(--glow-rgb), 0.7); }
+
+    /* ── GLOW BUTTON ── */
+    .login-btn {
+      width: 100%;
+      padding: 0.9rem 1rem; /* FIX: vertically balanced button */
+      padding: 0.8rem 1rem;
+      background: linear-gradient(
+        135deg,
+        var(--glow-color),
+        var(--glow-color-dark)
+      );
+      border: none;
+      border-radius: 10px; /* FIX: matches input border-radius */
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: "DM Mono", monospace;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow:
+        0 4px 15px rgba(var(--glow-rgb), 0.3),
+        0 0 30px rgba(var(--glow-rgb), 0.1);
+      margin-top: 0.25rem; /* FIX: tighter gap above button */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; 
+      left: -100%;
+      width: 100%; 
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.08),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+
+    .login-btn:hover {
+      box-shadow:
+        0 6px 25px rgba(var(--glow-rgb), 0.45),
+        0 0 50px rgba(var(--glow-rgb), 0.18);
+      transform: translateY(-1px);
+    }
+
+    .login-btn:hover::before { left: 100%; }
+    .login-btn:active { transform: translateY(0) scale(0.99); }
+
+    /* ── BOTTOM LINK ── */
+    .card-footer {
+      text-align: center;
+      margin-top: 1.25rem; /* FIX: consistent bottom spacing */
+      font-size: 0.6rem; /* FIX: slightly more readable */
+      margin-top: 1.25rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: rgba(240, 230, 211, 0.22);
+    }
+
+    .card-footer a {
+      color: rgba(240, 230, 211, 0.42);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .card-footer a:hover { color: rgba(var(--glow-rgb), 0.7); }
+
+    /* ── TOAST POPUPS (FLASH) ── */
+    .toast-container {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      width: max-content;
+      max-width: calc(100vw - 2rem); /* FIX: toasts don't overflow on mobile */
+    }
+
+    .toast {
+      background: rgba(20, 10, 10, 0.85);
+      border: 1px solid rgba(217, 79, 61, 0.4);
+      box-shadow: 0 4px 15px rgba(217, 79, 61, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #f0e6d3;
+      padding: 0.75rem 1.4rem;
+      border-radius: 30px;
+      font-family: "DM Mono", monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+      animation: toastEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, toastExit 0.4s ease 4s forwards;
+    }
+
+    @keyframes toastEnter {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes toastExit {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-20px); }
+    }
+
+    /* ── CLICK BUBBLES ── */
+    .click-bubble {
+      position: fixed;
+      transform: translate(-50%, -50%);
+      background: rgba(20, 10, 10, 0.9);
+      border: 1px solid rgba(var(--glow-rgb), 0.4);
+      box-shadow: 0 4px 15px rgba(var(--glow-rgb), 0.15);
+      color: #f0e6d3;
+      padding: 0.45rem 0.9rem;
+      border-radius: 20px;
+      font-family: "DM Mono", monospace;
+      font-size: 0.62rem;
+      pointer-events: none;
+      z-index: 9999;
+      animation: floatUpFade 2.5s ease-out forwards;
+      white-space: nowrap;
+      max-width: calc(100vw - 2rem); /* FIX: bubbles don't overflow mobile */
+    }
+
+    @keyframes floatUpFade {
+      0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+      100% { opacity: 0; transform: translate(-50%, calc(-50% - 50px)) scale(1); }
+    }
+
+    /* ── MOBILE RESPONSIVENESS ── */
+    @media (max-width: 480px) {
+      .card {
+        padding: 2rem 1.5rem; /* FIX: comfortable mobile padding */
+        border-radius: 16px;
+        margin: 0 1rem; /* FIX: proper side margins on mobile */
+        padding: 2rem 1.5rem;
+        border-radius: 14px;
+        margin: 0 1rem;
+      }
+      .card-title { font-size: 1.85rem; }
+      .card-title { font-size: 1.6rem; }
+      .lamp-cone { width: 100vw; }
+    }
+
+    /* ── iOS Safe Area ── */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .auth-page-container { padding-bottom: env(safe-area-inset-bottom); }
+    }
+  </style>
+
+<div class="auth-page-container">
+  <div class="toast-container">
+    <% flash.each do |key, value| %>
+      <div class="toast"><%= value %></div>
+    <% end %>
+    <% resource.errors.full_messages.each do |msg| %>
+      <div class="toast"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <div class="lamp-cord"></div>
+  <div class="lamp-bulb"></div>
+  <div class="lamp-switch" id="lamp-switch" title="Turn on the lights">
+    <div class="cord-line"></div>
+    <div class="cord-handle"></div>
+  </div>
+  <div class="lamp-cone"></div>
+  <div class="floor-glow"></div>
+
+  <div class="card-wrapper">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">The Studio</h1>
+        <p class="card-sub">Your private art archive</p>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="fields">
+          <div class="field">
+            <%= f.label :email %>
+            <%= f.email_field :email,
+                autofocus: true,
+                autocomplete: "email",
+                placeholder: "your@email.com" %>
+          </div>
+
+          <div class="field">
+            <%= f.label :password %>
+            <%= f.password_field :password,
+                autocomplete: "current-password",
+                placeholder: "••••••••" %>
+          </div>
+        </div>
+
+        <div class="remember-row">
+          <label class="remember-label">
+            <%= f.check_box :remember_me %>
+            Remember me
+          </label>
+          <%= link_to "Forgot password?", new_user_password_path, class: "forgot-link" %>
+        </div>
+
+        <%= f.submit "Enter the Studio", class: "login-btn" %>
+      <% end %>
+
+      <div class="card-footer">
+        No account? <%= link_to "Create one", new_user_registration_path %>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const switchBtn = document.getElementById("lamp-switch");
+      const container = document.querySelector(".auth-page-container");
+
+      // If there are login errors, keep the lights on so they can see them!
+      const hasErrors = <%= resource.errors.any? || flash.any? ? 'true' : 'false' %>;
+      if (!hasErrors) {
+        container.classList.add("lamp-off");
+      }
+
+      switchBtn.addEventListener("click", () => {
+        container.classList.toggle("lamp-off");
+      });
+
+      // Spawn floating bubbles on click if the lamp is off
+      document.addEventListener("click", (e) => {
+        if (container.classList.contains("lamp-off")) {
+          // Ensure we don't spawn a bubble if they actually click the pull switch!
+          if (!e.target.closest("#lamp-switch")) {
+            const bubble = document.createElement("div");
+            bubble.className = "click-bubble";
+            bubble.innerText = "Pull the cord to turn on the light 💡";
+            bubble.style.left = `${e.clientX}px`;
+            bubble.style.top = `${e.clientY}px`;
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 1500); // Clean up DOM after animation
+          }
+        }
+      });
+    });
+  </script>

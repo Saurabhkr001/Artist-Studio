@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analytics — The Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0907; color: #f0e6d3; font-family: "DM Mono", monospace; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    @media(max-width:768px) { .metric-row { grid-template-columns: repeat(2,1fr); } }
+
+    .metric {
+      background: #1a1612;
+      border: 1px solid #2a251e;
+      border-radius: 8px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-val {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 3rem;
+      font-weight: 300;
+      line-height: 1;
+      color: #f0e6d3;
+    }
+
+    .metric-lbl {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5a4e3a;
+      margin-top: 0.5rem;
+    }
+
+    .metric-bar {
+      height: 2px;
+      border-radius: 1px;
+      margin-top: 1rem;
+      transition: width 1.2s ease;
+    }
+
+    .metric-accent {
+      position: absolute;
+      top: 0; right: 0;
+      width: 3px;
+      height: 100%;
+    }
+
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    @media(max-width:768px) { .charts-row { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #1a1612;
+      border: 1px solid #2a251e;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .section-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #3a3028;
+      margin-bottom: 1.25rem;
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.65rem; color: #8a7a65; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+    .tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tag-name { font-size: 0.62rem; color: #c4933f; width: 100px; text-align: right; flex-shrink: 0; }
+    .tag-track { flex: 1; background: #1f1b16; border-radius: 2px; height: 5px; overflow: hidden; }
+    .tag-fill { height: 100%; background: #c4933f; border-radius: 2px; width: 0%; transition: width 1.2s ease; }
+    .tag-count { font-size: 0.62rem; color: #3a3028; width: 20px; }
+
+    .this-day-banner {
+      background: #1f1a10;
+      border: 1px solid #3a2e10;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .this-day-count {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: #c4933f;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #3a3028;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <%# Inject Rails data as JS %>
+  <script>
+    const DATA = {
+      total:    <%= @total %>,
+      public_count: <%= @public %>,
+      thisDay:  <%= @this_day %>,
+      status:   <%= @status_data.to_json.html_safe %>,
+      byYear:   <%= @by_year.to_json.html_safe %>,
+      byMedium: <%= @by_medium.to_json.html_safe %>,
+      tags:     <%= @top_tags.to_json.html_safe %>
+    };
+  </script>
+
+  <%# Reuse the admin nav from layout — manual here since layout: false isn't set %>
+  <nav style="background:#111009;border-bottom:1px solid #1e1b14;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:#f0e6d3;">The Studio</a>
+    <div style="display:flex;gap:2rem;align-items:center;">
+      <%= link_to "All Works", artworks_path, style:"font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5a4e3a;" %>
+      <%= link_to "Analytics", analytics_path, style:"font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4933f;" %>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <%# Header %>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2.5rem;">
+      <div>
+        <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:3rem;font-style:italic;font-weight:300;color:#f0e6d3;line-height:1;">
+          Studio Analytics
+        </h1>
+        <p style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#3a3028;margin-top:0.5rem;">
+          <%= Date.today.strftime("%B %d, %Y") %>
+        </p>
+      </div>
+      <div style="font-size:0.6rem;color:#2a251e;letter-spacing:0.1em;">
+        <%= @total %> total works
+      </div>
+    </div>
+
+    <%# This Day banner — only if paintings exist today %>
+    <% if @this_day > 0 %>
+      <div class="this-day-banner">
+        <div class="this-day-count"><%= @this_day %></div>
+        <div>
+          <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4933f;margin-bottom:0.3rem;">This Day in Your Studio</p>
+          <p style="font-size:0.8rem;color:#8a7a65;line-height:1.6;">
+            On this date in past years, you painted <%= @this_day %> <%= @this_day == 1 ? "work" : "works" %>.
+            <%= link_to "View them →", artworks_path, style:"color:#c4933f;" %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Stat cards %>
+    <div class="metric-row" id="metrics">
+      <div class="metric">
+        <div class="metric-accent" style="background:#c4933f;"></div>
+        <div class="metric-val"><%= @total %></div>
+        <div class="metric-lbl">Total works</div>
+        <div class="metric-bar" style="background:#c4933f;width:100%;"></div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:#4a7c59;"></div>
+        <div class="metric-val"><%= @status_data["available"] || 0 %></div>
+        <div class="metric-lbl">Available</div>
+        <div class="metric-bar" style="background:#4a7c59;width:<%= @total > 0 ? ((@status_data['available'] || 0).to_f / @total * 100).round : 0 %>%;"></div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:#3d6b9e;"></div>
+        <div class="metric-val"><%= @status_data["sold"] || 0 %></div>
+        <div class="metric-lbl">Sold</div>
+        <div class="metric-bar" style="background:#3d6b9e;width:<%= @total > 0 ? ((@status_data['sold'] || 0).to_f / @total * 100).round : 0 %>%;"></div>
+      </div>
+      <div class="metric">
+        <div class="metric-accent" style="background:#8a6a3a;"></div>
+        <div class="metric-val"><%= @public %></div>
+        <div class="metric-lbl">Published</div>
+        <div class="metric-bar" style="background:#8a6a3a;width:<%= @total > 0 ? (@public.to_f / @total * 100).round : 0 %>%;"></div>
+      </div>
+    </div>
+
+    <%# Charts row 1 %>
+    <div class="charts-row">
+
+      <%# Status donut %>
+      <div class="card">
+        <div class="section-label">Status breakdown</div>
+        <div class="legend" id="status-legend"></div>
+        <div style="position:relative;height:220px;">
+          <canvas id="statusChart" role="img" aria-label="Donut chart of artwork status breakdown"></canvas>
+        </div>
+      </div>
+
+      <%# Year bar %>
+      <div class="card">
+        <div class="section-label">Works by year</div>
+        <% if @by_year.any? %>
+          <div style="position:relative;height:260px;">
+            <canvas id="yearChart" role="img" aria-label="Bar chart of artworks created per year"></canvas>
+          </div>
+        <% else %>
+          <div class="empty-state">No year data yet</div>
+        <% end %>
+      </div>
+
+    </div>
+
+    <%# Medium horizontal bar — full width %>
+    <% if @by_medium.any? %>
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="section-label">Medium distribution</div>
+        <div style="position:relative;height:<%= [@by_medium.count * 44 + 40, 120].max %>px;">
+          <canvas id="mediumChart" role="img" aria-label="Horizontal bar chart of artworks by medium"></canvas>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Tags + In Progress two col %>
+    <div class="charts-row">
+
+      <%# Tag bars %>
+      <div class="card">
+        <div class="section-label">Top tags</div>
+        <% if @top_tags.any? %>
+          <div id="tag-bars"></div>
+        <% else %>
+          <div class="empty-state">No tags yet — add some to your artworks</div>
+        <% end %>
+      </div>
+
+      <%# Status list detail %>
+      <div class="card">
+        <div class="section-label">Full status detail</div>
+        <% Artwork.statuses.keys.each do |status| %>
+          <% count = @status_data[status] || 0 %>
+          <% pct = @total > 0 ? (count.to_f / @total * 100).round : 0 %>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#5a4e3a;width:90px;flex-shrink:0;">
+              <%= status.humanize %>
+            </span>
+            <div style="flex:1;background:#1f1b16;border-radius:2px;height:4px;overflow:hidden;">
+              <div style="height:100%;border-radius:2px;width:<%= pct %>%;transition:width 1s ease;
+                background:<%= status == 'available' ? '#4a7c59' : status == 'sold' ? '#3d6b9e' : status == 'in_progress' ? '#c4933f' : status == 'exhibited' ? '#3d8a8a' : status == 'gifted' ? '#7c4a8a' : '#3a3028' %>;">
+              </div>
+            </div>
+            <span style="font-size:0.62rem;color:<%= count > 0 ? '#a89880' : '#2a251e' %>;width:20px;text-align:right;">
+              <%= count %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const GOLD   = "#c4933f";
+    const BG     = "#1a1612";
+    const BORDER = "#2a251e";
+    const MUTED  = "#5a4e3a";
+    const TEXT   = "#a89880";
+
+    const STATUS_COLORS = {
+      available:   "#4a7c59",
+      sold:        "#3d6b9e",
+      in_progress: GOLD,
+      gifted:      "#7c4a8a",
+      exhibited:   "#3d8a8a",
+      archived:    "#2a251e"
+    };
+
+    const tooltipDefaults = {
+      backgroundColor: "#1a1612",
+      titleColor: "#f0e6d3",
+      bodyColor: TEXT,
+      borderColor: BORDER,
+      borderWidth: 1,
+      padding: 10
+    };
+
+    // ── STATUS DONUT ──
+    const statusKeys  = Object.keys(DATA.status).filter(k => DATA.status[k] > 0);
+    const statusVals  = statusKeys.map(k => DATA.status[k]);
+    const statusColors = statusKeys.map(k => STATUS_COLORS[k] || "#3a3028");
+
+    const legDiv = document.getElementById("status-legend");
+    statusKeys.forEach((k,i) => {
+      legDiv.innerHTML += `<span class="legend-item">
+        <span class="legend-dot" style="background:${statusColors[i]}"></span>
+        ${k.replace("_"," ")} · ${statusVals[i]}
+      </span>`;
+    });
+
+    if (statusVals.length > 0) {
+      new Chart(document.getElementById("statusChart"), {
+        type: "doughnut",
+        data: {
+          labels: statusKeys.map(k => k.replace("_"," ")),
+          datasets: [{
+            data: statusVals,
+            backgroundColor: statusColors,
+            borderColor: "#0a0907",
+            borderWidth: 3,
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: "70%",
+          plugins: { legend: { display: false }, tooltip: { ...tooltipDefaults,
+            callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}` }
+          }}
+        }
+      });
+    }
+
+    // ── YEAR BAR ──
+    const years    = Object.keys(DATA.byYear).sort();
+    const yearVals = years.map(y => DATA.byYear[y]);
+    if (years.length > 0) {
+      new Chart(document.getElementById("yearChart"), {
+        type: "bar",
+        data: {
+          labels: years,
+          datasets: [{
+            label: "Works",
+            data: yearVals,
+            backgroundColor: years.map((_,i) => i === years.length - 1 ? GOLD : "#2a251e"),
+            borderColor:     years.map((_,i) => i === years.length - 1 ? GOLD : "#3a3028"),
+            borderWidth: 1,
+            borderRadius: 3
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: tooltipDefaults },
+          scales: {
+            x: { ticks: { color: MUTED, font: { family: "DM Mono", size: 11 }, autoSkip: false },
+                 grid: { color: "#1f1b16" }, border: { color: BORDER } },
+            y: { ticks: { color: MUTED, font: { family: "DM Mono", size: 11 }, stepSize: 1 },
+                 grid: { color: "#1f1b16" }, border: { color: BORDER } }
+          }
+        }
+      });
+    }
+
+    // ── MEDIUM HORIZONTAL BAR ──
+    const mediums   = Object.keys(DATA.byMedium);
+    const medVals   = mediums.map(m => DATA.byMedium[m]);
+    if (mediums.length > 0) {
+      new Chart(document.getElementById("mediumChart"), {
+        type: "bar",
+        data: {
+          labels: mediums,
+          datasets: [{
+            data: medVals,
+            backgroundColor: "#2a251e",
+            borderColor: GOLD,
+            borderWidth: 1,
+            borderRadius: 3
+          }]
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: tooltipDefaults },
+          scales: {
+            x: { ticks: { color: MUTED, font: { family: "DM Mono", size: 11 }, stepSize: 1 },
+                 grid: { color: "#1f1b16" }, border: { color: BORDER } },
+            y: { ticks: { color: TEXT, font: { family: "DM Mono", size: 11 } },
+                 grid: { display: false }, border: { color: BORDER } }
+          }
+        }
+      });
+    }
+
+    // ── TAG BARS ──
+    const tagDiv = document.getElementById("tag-bars");
+    if (tagDiv) {
+      const tags   = Object.entries(DATA.tags).sort((a,b) => b[1] - a[1]);
+      const maxTag = tags.length > 0 ? tags[0][1] : 1;
+      tags.forEach(([name, count]) => {
+        const pct = Math.round(count / maxTag * 100);
+        tagDiv.innerHTML += `
+          <div class="tag-row">
+            <span class="tag-name">#${name}</span>
+            <div class="tag-track">
+              <div class="tag-fill" data-w="${pct}%"></div>
+            </div>
+            <span class="tag-count">${count}</span>
+          </div>`;
+      });
+      setTimeout(() => {
+        document.querySelectorAll(".tag-fill").forEach(el => el.style.width = el.dataset.w);
+      }, 120);
+    }
+  </script>
+
+</body>
+</html>

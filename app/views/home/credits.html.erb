@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credits — The Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #faf9f6; /* Bone/Parchment white */
+      color: #1a1a1a;
+      font-family: "Inter", sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .font-serif { font-family: "Playfair Display", serif; }
+
+    /* Container for a structured, classic scroll */
+    .content-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 15vh 2rem;
+      text-align: center;
+    }
+
+    /* Section styling */
+    section {
+      margin-bottom: 12rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease-out;
+    }
+
+    /* Simple scroll-in effect (No JS needed for a classic feel) */
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Typography */
+    .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #8c8c8c;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 400;
+      font-style: italic;
+      color: #1a1a1a;
+      margin-bottom: 1rem;
+    }
+
+    .role-title {
+      font-family: "Playfair Display", serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .name-detail {
+      font-size: 1rem;
+      color: #555;
+      font-style: italic;
+    }
+
+    /* Visual elements */
+    .rule {
+      width: 60px;
+      height: 1px;
+      background: #d4af37; /* Subtle Gold */
+      margin: 3rem auto;
+    }
+
+    .classic-border {
+      border: 1px solid #e5e5e5;
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+
+    /* Note styling */
+    .note-text {
+      font-family: "Playfair Display", serif;
+      font-size: 1.25rem;
+      line-height: 2;
+      color: #2a2a2a;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .signature {
+      margin-top: 2rem;
+      font-style: italic;
+      color: #d4af37;
+    }
+
+    /* Navigation */
+    .nav-link {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      text-decoration: none;
+      border-bottom: 1px solid #1a1a1a;
+      padding-bottom: 4px;
+    }
+
+    .nav-link:hover { color: #d4af37; border-color: #d4af37; }
+
+  </style>
+</head>
+<body>
+
+  <div class="content-wrapper">
+
+    <%# ---- TITLE CARD ---- %>
+    <section class="visible">
+      <span class="label">A Commemorative Project</span>
+      <h1 class="font-serif">The Studio</h1>
+      <div class="rule"></div>
+      <p class="name-detail">Edition No. 1 &nbsp;·&nbsp; <%= Date.today.year %></p>
+    </section>
+
+    <%# ---- ROLES ---- %>
+    <section class="visible">
+      <span class="label">Directed by</span>
+      <p class="role-title">Your Dev Friend</p>
+      
+      <div style="margin-top: 6rem;">
+        <span class="label">Featuring</span>
+        <p class="role-title">The Artist</p>
+        <p class="name-detail">In his most prolific year yet</p>
+      </div>
+
+      <div style="margin-top: 6rem;">
+        <span class="label">Platform Architecture</span>
+        <p class="role-title">Ruby on Rails</p>
+        <p class="name-detail">The engine beneath the canvas</p>
+      </div>
+    </section>
+
+    <%# ---- TECHNICALS ---- %>
+    <section class="visible">
+      <div class="classic-border">
+        <span class="label">Technical Specifications</span>
+        <div style="margin: 2rem 0;">
+          <p style="margin-bottom: 1.5rem;"><strong>Architecture:</strong> Custom Crafted Ruby</p>
+          <p style="margin-bottom: 1.5rem;"><strong>Curation:</strong> Human Driven</p>
+          <p><strong>QA:</strong> Minimalist Approach</p>
+        </div>
+      </div>
+    </section>
+
+    <%# ---- HUMOR SECTION ---- %>
+    <section class="visible">
+      <span class="label">Special Acknowledgments</span>
+      <p class="role-title" style="font-size: 1.4rem;">Stack Overflow</p>
+      <p class="name-detail">For solving bugs I didn't know I had</p>
+      
+      <div style="margin-top: 4rem;">
+        <p class="role-title" style="font-size: 1.4rem;">Caffeine</p>
+        <p class="name-detail">The silent partner in development</p>
+      </div>
+    </section>
+
+    <%# ---- PERSONAL NOTE ---- %>
+    <section class="visible">
+      <div class="note-text">
+        "I watched you choose paint when I chose code. 
+        It turns out we were both trying to build something 
+        that lasts. This space is yours—to catalog, 
+        to exhibit, and to remember."
+        <p class="signature">— Your Annoying Dev Friend</p>
+      </div>
+    </section>
+
+    <%# ---- FOOTER ---- %>
+    <footer>
+      <div class="rule"></div>
+      <p class="label" style="margin-top: 2rem;">© <%= Date.today.year %> &nbsp;·&nbsp; Fin.</p>
+    </footer>
+
+  </div>
+
+  <a href="/" class="nav-link">Return to Dashboard →</a>
+
+  <script>
+    // Simple intersection observer to fade in sections as he scrolls
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(section => {
+      observer.observe(section);
+    });
+  </script>
+
+</body>
+</html>

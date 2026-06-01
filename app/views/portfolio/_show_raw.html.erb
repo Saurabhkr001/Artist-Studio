@@ -1,0 +1,34 @@
+<div class="show-raw">
+  <div style="padding: 6rem 3rem; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+    <div style="position: relative;">
+      <% if @artwork.images.attached? %>
+        <%= image_tag @artwork.images.first, style: "width: 100%; filter: grayscale(1) brightness(0.8);" %>
+      <% end %>
+    </div>
+    <div>
+      <p style="font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem;">
+        <%= [@artwork.year_created, @artwork.medium].compact.join(' · ') %>
+      </p>
+      <h1 style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(4rem, 8vw, 6rem); text-transform: uppercase; font-weight: 900; line-height: 0.9; margin-bottom: 3rem; color: #fff;">
+        <%= @artwork.title %>
+      </h1>
+      
+      <div style="display: grid; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+        <% if @artwork.dimensions_cm.present? %>
+          <div style="display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; color: #fff;">
+            <span style="color: rgba(255,255,255,0.4);">DIMENSIONS</span>
+            <span><%= @artwork.dimensions_cm %> cm</span>
+          </div>
+        <% end %>
+        <div style="display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; color: #fff;">
+          <span style="color: rgba(255,255,255,0.4);">STATUS</span>
+          <span><%= @artwork.status.upcase %></span>
+        </div>
+      </div>
+      
+      <% if @artwork.description.present? %>
+        <p style="margin-top: 3rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 2;"><%= @artwork.description %></p>
+      <% end %>
+    </div>
+  </div>
+</div>

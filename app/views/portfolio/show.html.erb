@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= @artwork.title %> — Studio Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500;700&family=Barlow+Condensed:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <style>
+    /* Base Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#0a0907;--bg2:#111009;--border:#1e1b14;--border2:#2a2520;
+      --cream:#f0e6d3;--cream2:#c8b99e;--muted:#6a5e4e;--dimmed:#3a3028;
+      --gold:#b8862e;--green:#4a7c59;
+    }
+    html,body{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--cream);font-family:"DM Mono",monospace;font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+    a{text-decoration:none;color:inherit;}
+    .font-display { font-family: "Cormorant Garamond", Georgia, serif; }
+
+    /* Nav / Slider Styles */
+    nav{position:sticky;top:0;z-index:50;background:rgba(10,9,7,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;transition:all 0.5s ease;}
+    .nav-name{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.15rem;font-style:italic;font-weight:300;color:var(--cream);}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .mode-slider { display: flex; position: relative; background: var(--border2); border-radius: 20px; padding: 2px; gap: 2px; align-items: center; }
+    .mode-btn { position: relative; z-index: 1; background: none; border: none; color: var(--muted); font-family: "DM Mono", monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; cursor: pointer; transition: color 0.3s; border-radius: 18px; }
+    .mode-btn.active { color: var(--bg); }
+    .slider-pill { position: absolute; top: 2px; bottom: 2px; left: 0; background: var(--gold); border-radius: 18px; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0; }
+
+    /* Classic Mode */
+    .show-classic { display: block; }
+    .thumb { opacity: 0.5; transition: opacity 0.2s; cursor: pointer; border: 1px solid transparent; }
+    .thumb:hover, .thumb.active { opacity: 1; border-color: var(--gold); }
+
+    /* Raw Mode */
+    body.raw{background:#000;color:#fff;cursor:none;}
+    body.raw::after{content:'';position:fixed;inset:0;z-index:8000;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/feTurbulence%3E%3C/svg%3E");opacity:0.04;}
+    #raw-cursor{position:fixed;width:10px;height:10px;background:#fff;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s;mix-blend-mode:difference;display:none;}
+    #raw-cursor-cross{position:fixed;pointer-events:none;z-index:9998;display:none;}
+    #raw-cursor-cross::before,#raw-cursor-cross::after{content:'';position:absolute;background:rgba(255,255,255,0.3);}
+    #raw-cursor-cross::before{width:1px;height:24px;left:50%;transform:translateX(-50%) translateY(-50%);}
+    #raw-cursor-cross::after{width:24px;height:1px;top:50%;transform:translateY(-50%) translateX(-50%);}
+    body.raw #raw-cursor,body.raw #raw-cursor-cross{display:block;}
+    body.raw *{cursor:none!important;}
+    body.raw nav{background:rgba(0,0,0,0.95);border-bottom:1px solid rgba(255,255,255,0.08);}
+    body.raw .nav-name{font-family:"Barlow Condensed",sans-serif;font-style:normal;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;font-size:0.9rem;color:#fff;}
+    body.raw .mode-slider { background: rgba(255,255,255,0.1); }
+    body.raw .mode-btn { color: rgba(255,255,255,0.5); }
+    body.raw .mode-btn.active { color: #000; }
+    body.raw .slider-pill { background: #fff; }
+    .show-raw { display: none; }
+    body.raw .show-raw { display: block; }
+    body.raw .show-classic { display: none; }
+
+    /* Creative Mode */
+    body.creative { background: #0f0e0d; color: #fff; }
+    body.creative nav { background: transparent; border-bottom: none; position: absolute; top: 0; width: 100%; z-index: 100; }
+    body.creative .nav-name { color: #fff; font-family: "Space Grotesk", sans-serif; font-size: 1.5rem; font-style: normal; }
+    body.creative .mode-slider { background: rgba(255,255,255,0.1); }
+    body.creative .mode-btn { color: rgba(255,255,255,0.5); }
+    body.creative .mode-btn.active { color: #000; }
+    body.creative .slider-pill { background: #ff4d4d; }
+    .show-creative { display: none; }
+    body.creative .show-creative { display: block; }
+    body.creative .show-classic { display: none; }
+
+    /* Responsive overrides */
+    @media(max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .show-raw > div { grid-template-columns: 1fr !important; gap: 2rem !important; padding: 4rem 1.5rem !important; }
+      .show-creative > div > div { flex-direction: column !important; gap: 3rem !important; }
+      .show-classic main > div { grid-template-columns: 1fr !important; gap: 3rem !important; }
+      .show-creative > div { padding: 4rem 1.5rem !important; }
+    }
+    @media(hover:none){
+      #raw-cursor,#raw-cursor-cross{display:none!important;}
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="raw-cursor"></div>
+  <div id="raw-cursor-cross"></div>
+
+  <nav id="main-nav">
+    <a href="<%= portfolio_path %>" class="nav-name">← All Works</a>
+    <div class="nav-links">
+      <div class="mode-slider" id="mode-slider">
+        <button class="mode-btn" data-mode="classic" onclick="setMode('classic')">Classic</button>
+        <button class="mode-btn" data-mode="raw" onclick="setMode('raw')">Raw</button>
+        <button class="mode-btn" data-mode="creative" onclick="setMode('creative')">Creative</button>
+        <div class="slider-pill" id="slider-pill"></div>
+      </div>
+    </div>
+  </nav>
+
+  <%= render "show_classic" %>
+  <%= render "show_raw" %>
+  <%= render "show_creative" %>
+
+  <script>
+    const STORAGE_KEY = "portfolio_view_mode";
+    const MODES = ["classic", "raw", "creative"];
+    let currentMode = localStorage.getItem(STORAGE_KEY);
+    if (!MODES.includes(currentMode)) currentMode = "classic";
+
+    function updateSliderPill(mode) {
+      const btn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+      const pill = document.getElementById("slider-pill");
+      if (btn && pill) {
+        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        pill.style.width = `${btn.offsetWidth}px`;
+        pill.style.transform = `translateX(${btn.offsetLeft}px)`;
+      }
+    }
+
+    function applyMode(mode) {
+      document.body.classList.remove("raw", "creative");
+      if (mode === "raw") document.body.classList.add("raw");
+      if (mode === "creative") document.body.classList.add("creative");
+      updateSliderPill(mode);
+    }
+
+    function setMode(mode) {
+      if (mode === currentMode) return;
+      currentMode = mode;
+      localStorage.setItem(STORAGE_KEY, currentMode);
+      applyMode(currentMode);
+    }
+
+    applyMode(currentMode);
+
+    window.addEventListener("resize", () => updateSliderPill(currentMode));
+    window.addEventListener("load", () => updateSliderPill(currentMode));
+
+    /* ── RAW CURSOR (desktop only) ── */
+    const isTouch = window.matchMedia("(hover: none)").matches;
+    if (!isTouch) {
+      const cur = document.getElementById("raw-cursor");
+      const cross = document.getElementById("raw-cursor-cross");
+      if (cur && cross) {
+        let cx = -100, cy = -100;
+        let tx = -100, ty = -100;
+
+        document.addEventListener("mousemove", e => {
+          cx = e.clientX; cy = e.clientY;
+          cur.style.left = cx + "px";
+          cur.style.top  = cy + "px";
+        });
+
+        (function lerpCross() {
+          tx += (cx - tx) * 0.12;
+          ty += (cy - ty) * 0.12;
+          cross.style.left = tx + "px";
+          cross.style.top  = ty + "px";
+          requestAnimationFrame(lerpCross);
+        })();
+
+        document.addEventListener("mousedown", () => { cur.style.transform = "translate(-50%,-50%) scale(0.5)"; });
+        document.addEventListener("mouseup", () => { cur.style.transform = "translate(-50%,-50%) scale(1)"; });
+
+        document.querySelectorAll("a, button, .thumb").forEach(el => {
+          el.addEventListener("mouseenter", () => { cur.style.width="20px"; cur.style.height="20px"; });
+          el.addEventListener("mouseleave", () => { cur.style.width="10px"; cur.style.height="10px"; });
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>

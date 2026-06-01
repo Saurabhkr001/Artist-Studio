@@ -1,0 +1,98 @@
+<div style="max-width:640px;margin:0 auto;">
+
+  <div style="margin-bottom:2.5rem;">
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-style:italic;font-weight:300;color:#f0e6d3;">
+      Your Profile
+    </h1>
+    <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#3a3028;margin-top:0.3rem;letter-spacing:0.1em;">
+      Shown on your public portfolio page
+    </p>
+  </div>
+
+  <%= form_with model: current_user, url: profile_path, method: :patch, local: true do |f| %>
+    <div style="display:grid;gap:2rem;">
+
+      <%# ── AVATAR ── %>
+      <div>
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.75rem;">
+          Profile Picture
+        </label>
+        <div style="display:flex;align-items:center;gap:1.5rem;">
+          <% if current_user.avatar.attached? %>
+            <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid #2a251e;flex-shrink:0;">
+              <%= image_tag current_user.avatar,
+                  style: "width:100%;height:100%;object-fit:cover;" %>
+            </div>
+          <% else %>
+            <div style="width:80px;height:80px;border-radius:50%;background:#1a1612;border:2px dashed #2a251e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span style="font-size:1.5rem;">🎨</span>
+            </div>
+          <% end %>
+          <div style="flex:1;">
+            <%= f.file_field :avatar, accept: "image/*",
+                style: "width:100%;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;file-selector-button-background:#1a1612;" %>
+            <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
+              Shown in a round frame on your portfolio. Square crop recommended.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <%# ── COVER IMAGE ── %>
+      <div>
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.75rem;">
+          Cover Image
+        </label>
+        <% if current_user.cover_image.attached? %>
+          <div style="width:100%;height:120px;border-radius:8px;overflow:hidden;margin-bottom:0.75rem;border:1px solid #2a251e;">
+            <%= image_tag current_user.cover_image,
+                style: "width:100%;height:100%;object-fit:cover;opacity:0.7;" %>
+          </div>
+        <% else %>
+          <div style="width:100%;height:80px;border-radius:8px;background:#1a1612;border:2px dashed #2a251e;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+            <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#2a251e;">No cover image yet</span>
+          </div>
+        <% end %>
+        <%= f.file_field :cover_image, accept: "image/*",
+            style: "width:100%;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;" %>
+        <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
+          Used as the hero background on your portfolio. Wide landscape image works best.
+        </p>
+      </div>
+
+      <%# ── NAME ── %>
+      <div>
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+          Your Name
+        </label>
+        <%= f.text_field :name,
+            placeholder: "e.g. Priya Sharma",
+            style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+      </div>
+
+      <%# ── CONTACT EMAIL ── %>
+      <div>
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+          Contact Email (public)
+        </label>
+        <%= f.email_field :contact_email,
+            placeholder: "e.g. priya@studio.art",
+            style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+      </div>
+
+      <%# ── ARTIST STATEMENT ── %>
+      <div>
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+          Artist Statement
+        </label>
+        <%= f.text_area :artist_statement, rows: 4,
+            placeholder: "A short statement about your work, practice, or approach...",
+            style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
+      </div>
+
+      <%= f.submit "Save Profile",
+          style: "background:none;border:1px solid #c4933f;color:#c4933f;padding:0.65rem 1.5rem;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;border-radius:4px;" %>
+
+    </div>
+  <% end %>
+</div>

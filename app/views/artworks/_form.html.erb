@@ -1,0 +1,128 @@
+<%= form_with model: artwork, class: "space-y-6" do |f| %>
+
+  <% if artwork.errors.any? %>
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+      <p class="text-sm font-medium text-red-800 mb-2">
+        <%= pluralize(artwork.errors.count, "error") %> prevented this from saving:
+      </p>
+      <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+        <% artwork.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# ---- TITLE ---- %>
+  <div>
+    <%= f.label :title, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.text_field :title,
+        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400",
+        placeholder: "Untitled (but give it a name)" %>
+  </div>
+
+  <%# ---- MEDIUM + DIMENSIONS ---- %>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :medium, class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.text_field :medium,
+          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
+          placeholder: "Oil on canvas" %>
+    </div>
+    <div>
+      <%= f.label :dimensions_cm, "Dimensions (cm)", class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.text_field :dimensions_cm,
+          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
+          placeholder: "60 × 80" %>
+    </div>
+  </div>
+
+  <%# ---- YEAR + PAINTED ON ---- %>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :year_created, class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.number_field :year_created,
+          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
+          placeholder: Date.today.year %>
+    </div>
+    <div>
+      <%= f.label :painted_on, "Date Painted", class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.date_field :painted_on,
+          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400" %>
+    </div>
+  </div>
+
+  <%# ---- STATUS ---- %>
+  <div>
+    <%= f.label :status, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.select :status,
+        Artwork.statuses.keys.map { |s| [s.humanize, s] },
+        {},
+        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 
+                focus:outline-none focus:ring-2 focus:ring-stone-400
+                bg-white text-stone-900
+                [&>option]:bg-white [&>option]:text-stone-900" %>
+  </div>
+
+  <%# ---- DESCRIPTION ---- %>
+  <div>
+    <%= f.label :description, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.text_area :description, rows: 4,
+        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
+        placeholder: "Notes about this piece, inspiration, context..." %>
+  </div>
+
+  <%# ---- IMAGES ---- %>
+  <div>
+    <%= f.label :images, "Images", class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.file_field :images, multiple: true, accept: "image/*",
+        class: "w-full text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-stone-900 file:text-white hover:file:bg-stone-700" %>
+    <p class="text-xs text-stone-400 mt-1">You can select multiple images. First image will be the cover.</p>
+  </div>
+
+  <%# ---- PUBLIC TOGGLE ---- %>
+  <div class="flex items-center gap-3">
+    <%= f.check_box :is_public, class: "w-4 h-4 rounded border-stone-300" %>
+    <%= f.label :is_public, class: "text-sm text-stone-700" do %>
+      Show on public portfolio
+      <span class="text-stone-400">(galleries and buyers can see this)</span>
+    <% end %>
+  </div>
+
+  <%# ---- TAGS ---- %>
+  <div>
+    <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+      Tags
+    </label>
+    <input
+      type="text"
+      name="tag_list"
+      value="<%= artwork.tags.map(&:name).join(', ') %>"
+      placeholder="oil, portrait, landscape, impressionist..."
+      style="width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;"
+    />
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#2a251e;margin-top:0.4rem;">
+      Separate tags with commas — e.g. oil, portrait, figurative, 2023
+    </p>
+
+    <%# Show existing tags as clickable pills %>
+    <% if artwork.tags.any? %>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;">
+        <% artwork.tags.each do |tag| %>
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:#2a251e;color:#c4933f;border-radius:3px;">
+            #<%= tag.name %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ---- SUBMIT ---- %>
+  <div class="pt-2">
+    <%= f.submit artwork.persisted? ? "Save Changes" : "Add to Studio",
+        class: "bg-stone-900 text-white px-6 py-3 rounded-lg hover:bg-stone-700 cursor-pointer font-medium" %>
+    <%= link_to "Cancel", artwork.persisted? ? artwork_path(artwork.slug) : artworks_path,
+        class: "ml-4 text-sm text-stone-400 hover:text-stone-700" %>
+  </div>
+
+<% end %>

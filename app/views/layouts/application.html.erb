@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="turbo-cache-control" content="no-preview">
+    <title>The Studio</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full bg-canvas font-sans antialiased">
+
+    <% if user_signed_in? %>
+      <nav class="bg-canvas2 border-b border-canvas3 px-8 py-5 flex items-center justify-between">
+        <%= link_to root_path, class: "font-display text-2xl italic text-cream" do %>
+          The Studio
+        <% end %>
+        <div class="flex items-center gap-8">
+          <%= link_to "Portfolio ↗", portfolio_path,
+              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors",
+              target: "_blank" %>
+          <%= link_to "Profile", edit_profile_path,
+              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
+          <%= link_to "All Works", artworks_path,
+              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
+          <%= link_to "+ Add Artwork", new_artwork_path,
+              class: "font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all" %>
+          <%= link_to "Sign Out", destroy_user_session_path,
+              data: { turbo_method: :delete },
+              class: "font-mono text-xs uppercase tracking-widest text-stone-600 hover:text-cream transition-colors" %>
+              <%= link_to "Analytics", analytics_path,
+    class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
+        </div>
+
+      </nav>
+    <% end %>
+
+    <% if notice.present? %>
+      <div id="toast-wrap" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;pointer-events:none;">
+        <div id="toast" style="
+          pointer-events:all;
+          background:#1a1612;
+          border:1px solid #c4933f;
+          border-radius:16px 16px 4px 16px;
+          padding:0.9rem 1.2rem 0.9rem 1rem;
+          display:flex;
+          align-items:flex-start;
+          gap:0.75rem;
+          max-width:280px;
+          box-shadow:0 4px 24px rgba(0,0,0,0.5);
+          transform:translateY(20px);
+          opacity:0;
+          transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;
+          position:relative;
+        ">
+          <div style="
+            width:28px;height:28px;border-radius:50%;
+            background:#2a251e;border:1px solid #c4933f;
+            display:flex;align-items:center;justify-content:center;
+            flex-shrink:0;margin-top:1px;
+          ">
+            <span style="color:#c4933f;font-size:0.8rem;">✓</span>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#f0e6d3;line-height:1.5;margin:0;">
+              <%= notice %>
+            </p>
+            <div id="toast-bar" style="
+              height:2px;background:#c4933f;border-radius:1px;
+              margin-top:0.6rem;width:100%;
+              transform-origin:left;
+              animation:shrink 3s linear forwards;
+            "></div>
+          </div>
+          <button onclick="dismissToast()" style="
+            background:none;border:none;cursor:pointer;
+            color:#3a3028;font-size:1rem;padding:0;
+            line-height:1;flex-shrink:0;margin-top:1px;
+            font-family:'DM Mono',monospace;
+          ">&times;</button>
+
+          <div style="
+            position:absolute;
+            bottom:-6px;right:16px;
+            width:0;height:0;
+            border-left:6px solid transparent;
+            border-right:6px solid transparent;
+            border-top:6px solid #c4933f;
+          "></div>
+        </div>
+      </div>
+
+      <style>
+        @keyframes shrink {
+          from { transform: scaleX(1); }
+          to   { transform: scaleX(0); }
+        }
+      </style>
+
+      <script>
+        (function() {
+          var t = document.getElementById('toast');
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              t.style.transform = 'translateY(0)';
+              t.style.opacity   = '1';
+            });
+          });
+
+          var timer = setTimeout(dismissToast, 3000);
+
+          function dismissToast() {
+            clearTimeout(timer);
+            t.style.transform = 'translateY(20px)';
+            t.style.opacity   = '0';
+            setTimeout(function() {
+              var w = document.getElementById('toast-wrap');
+              if (w) w.remove();
+            }, 350);
+          }
+
+          window.dismissToast = dismissToast;
+        })();
+      </script>
+    <% end %>
+    
+    <% if alert.present? %>
+      <% unless alert == "You need to sign in or sign up before continuing." && controller_name == 'sessions' && action_name == 'new' %>
+        <div id="alert-wrap" style="position:fixed;bottom:2rem;left:2rem;z-index:9999;pointer-events:none;">
+          <div id="alert-toast" style="
+            pointer-events:all;
+            background:#1a1612;
+            border:1px solid #a83232;
+            border-radius:16px 16px 16px 4px;
+            padding:0.9rem 1.2rem 0.9rem 1rem;
+            display:flex;
+            align-items:flex-start;
+            gap:0.75rem;
+            max-width:280px;
+            box-shadow:0 4px 24px rgba(0,0,0,0.5);
+            transform:translateY(20px);
+            opacity:0;
+            transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;
+            position:relative;
+          ">
+            <div style="
+              width:28px;height:28px;border-radius:50%;
+              background:#2a1a1a;border:1px solid #a83232;
+              display:flex;align-items:center;justify-content:center;
+              flex-shrink:0;margin-top:1px;
+            ">
+              <span style="color:#e05555;font-size:0.85rem;">✕</span>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#f0e6d3;line-height:1.5;margin:0;">
+                <%= alert %>
+              </p>
+              <div style="
+                height:2px;background:#a83232;border-radius:1px;
+                margin-top:0.6rem;width:100%;
+                transform-origin:left;
+                animation:shrink 4s linear forwards;
+              "></div>
+            </div>
+            <button onclick="dismissAlert()" style="
+              background:none;border:none;cursor:pointer;
+              color:#3a3028;font-size:1rem;padding:0;
+              line-height:1;flex-shrink:0;margin-top:1px;
+              font-family:'DM Mono',monospace;
+            ">&times;</button>
+
+            <div style="
+              position:absolute;
+              bottom:-6px;left:16px;
+              width:0;height:0;
+              border-left:6px solid transparent;
+              border-right:6px solid transparent;
+              border-top:6px solid #a83232;
+            "></div>
+          </div>
+        </div>
+
+        <script>
+          (function() {
+            var t = document.getElementById('alert-toast');
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                t.style.transform = 'translateY(0)';
+                t.style.opacity   = '1';
+              });
+            });
+
+            var timer = setTimeout(dismissAlert, 4000);
+
+            function dismissAlert() {
+              clearTimeout(timer);
+              t.style.transform = 'translateY(20px)';
+              t.style.opacity   = '0';
+              setTimeout(function() {
+                var w = document.getElementById('alert-wrap');
+                if (w) w.remove();
+              }, 350);
+            }
+
+            window.dismissAlert = dismissAlert;
+          })();
+        </script>
+      <% end %>
+    <% end %>
+
+    <% if devise_controller? %>
+      <main>
+        <%= yield %>
+      </main>
+    <% else %>
+      <main class="max-w-7xl mx-auto px-8 py-12">
+        <%= yield %>
+      </main>
+
+      <footer class="mt-24 border-t border-canvas3 px-8 py-10 text-center font-mono text-xs text-stone-600">
+        Built with love, questionable taste, and way too many commits.
+        <br>
+        <%= link_to "who made this?", "/credits", class: "underline hover:text-ochre transition-colors mt-2 inline-block" %>
+      </footer>
+    <% end %>
+
+  </body>
+</html>

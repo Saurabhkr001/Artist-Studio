@@ -1,0 +1,18 @@
+<nav id="main-nav">
+  <span class="nav-name"><%= @user.display_name %></span>
+  <div class="nav-links">
+    <a href="#works">Works</a>
+    <% if @user.artist_statement.present? %>
+      <a href="#about">About</a>
+    <% end %>
+    <% if @user.contact_email.present? %>
+      <a href="mailto:<%= @user.contact_email %>" class="nav-contact">Enquire</a>
+    <% end %>
+    <div class="mode-slider" id="mode-slider">
+      <button class="mode-btn" data-mode="classic" onclick="setMode('classic')">Classic</button>
+      <button class="mode-btn" data-mode="raw" onclick="setMode('raw')">Raw</button>
+      <button class="mode-btn" data-mode="creative" onclick="setMode('creative')">Creative</button>
+      <div class="slider-pill" id="slider-pill"></div>
+    </div>
+  </div>
+</nav>

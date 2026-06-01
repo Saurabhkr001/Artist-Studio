@@ -1,0 +1,194 @@
+<div class="max-w-5xl mx-auto space-y-10">
+
+  <%# ---- BACK LINK ---- %>
+  <%= link_to "← All Works", artworks_path,
+      class: "text-sm text-stone-400 hover:text-stone-700" %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-6">
+
+    <%# ---- IMAGES ---- %>
+    <div class="space-y-3">
+      <% if @artwork.images.attached? %>
+        <div class="aspect-square bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
+          <%= image_tag @artwork.images.first,
+              class: "w-full h-full object-cover" %>
+        </div>
+        <% if @artwork.images.count > 1 %>
+          <div class="grid grid-cols-4 gap-2">
+            <% @artwork.images.each do |image| %>
+              <div class="aspect-square bg-stone-100 rounded-lg overflow-hidden border border-stone-200">
+                <%= image_tag image, class: "w-full h-full object-cover" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="aspect-square bg-stone-100 rounded-2xl flex items-center justify-center text-stone-400">
+          <p class="text-sm">No image attached</p>
+        </div>
+      <% end %>
+    </div>
+
+    <%# ---- DETAILS ---- %>
+    <div class="space-y-6">
+
+      <div>
+        <div class="flex items-start justify-between">
+          <h1 class="text-3xl font-bold text-stone-900"><%= @artwork.title %></h1>
+          <span class="text-xs px-3 py-1 rounded-full mt-1
+            <%= @artwork.available? ? 'bg-emerald-100 text-emerald-700' :
+                @artwork.sold? ? 'bg-blue-100 text-blue-700' :
+                'bg-stone-100 text-stone-500' %>">
+            <%= @artwork.status.humanize %>
+          </span>
+        </div>
+        <p class="text-stone-500 mt-1">
+          <%= [@artwork.medium, @artwork.year_created].compact.join(" · ") %>
+        </p>
+      </div>
+
+      <% if @artwork.dimensions_cm.present? %>
+        <div>
+          <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Dimensions</p>
+          <p class="text-stone-700"><%= @artwork.dimensions_cm %> cm</p>
+        </div>
+      <% end %>
+
+      <% if @artwork.painted_on.present? %>
+        <div>
+          <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Date Painted</p>
+          <p class="text-stone-700"><%= @artwork.painted_on.strftime("%B %d, %Y") %></p>
+        </div>
+      <% end %>
+
+      <% if @artwork.description.present? %>
+        <div>
+          <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Notes</p>
+          <p class="text-stone-700 leading-relaxed"><%= @artwork.description %></p>
+        </div>
+      <% end %>
+
+      <div>
+        <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Portfolio</p>
+        <p class="text-stone-700">
+          <%= @artwork.is_public? ? "Visible on public portfolio" : "Private — not shown publicly" %>
+        </p>
+      </div>
+
+      <%# ---- ACTIONS ---- %>
+      <div class="flex items-center gap-4 pt-4 border-t border-stone-200">
+        <%= link_to "Edit", edit_artwork_path(@artwork.slug),
+            class: "bg-stone-900 text-white px-5 py-2.5 rounded-lg hover:bg-stone-700 text-sm font-medium" %>
+        <%= link_to "Delete", artwork_path(@artwork.slug),
+            data: {
+              turbo_method: :delete,
+              turbo_confirm: "Remove \"#{@artwork.title}\" from your studio? This can't be undone."
+            },
+            class: "text-red-400 hover:text-red-600 text-sm" %>
+      </div>
+
+    </div>
+  </div>
+
+  <% if @artwork.tags.any? %>
+    <div>
+      <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;font-family:'DM Mono',monospace;">Tags</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+        <% @artwork.tags.each do |tag| %>
+          <%= link_to artworks_path(tag: tag.name), style:"font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:#2a251e;color:#c4933f;border-radius:3px;text-decoration:none;" do %>
+            #<%= tag.name %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# ---- LETTERS TO FUTURE ME ---- %>
+  <div style="border-top: 1px solid #2a251e; padding-top: 3rem; margin-top: 3rem;">
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+      <div>
+        <h2 class="font-display" style="font-size: 1.8rem; font-style: italic; color: #f0e6d3;">
+          Letters to Future Me
+        </h2>
+        <p style="font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #3a3028; margin-top: 0.3rem;">
+          Private notes — never shown publicly
+        </p>
+      </div>
+    </div>
+
+    <%# Existing letters %>
+    <% if @artwork.studio_notes.any? %>
+      <div style="display: grid; gap: 1.5rem; margin-bottom: 3rem;">
+        <% @artwork.studio_notes.order(written_on: :desc).each do |note| %>
+          <div style="background: #1a1612; border: 1px solid #2a251e; border-radius: 8px; padding: 1.5rem; position: relative;">
+            <p style="font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #3a3028; margin-bottom: 0.75rem;">
+              <%= note.written_on&.strftime("%B %d, %Y") || "Undated" %>
+            </p>
+            <p style="color: #a89880; font-size: 0.85rem; line-height: 1.9; white-space: pre-wrap;">
+              <%= note.body %>
+            </p>
+            <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #2a251e;">
+              <%= link_to "Remove",
+                  studio_note_path(note),
+                  data: { turbo_method: :delete, turbo_confirm: "Remove this letter? It's gone forever." },
+                  style: "font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: #2a251e; text-decoration: none;" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="text-align: center; padding: 3rem; border: 1px dashed #2a251e; border-radius: 8px; margin-bottom: 2rem;">
+        <p class="font-display" style="font-size: 1.3rem; font-style: italic; color: #3a3028;">
+          No letters yet.
+        </p>
+        <p style="font-size: 0.65rem; color: #2a251e; margin-top: 0.5rem; letter-spacing: 0.1em;">
+          Write something to your future self about this painting.
+        </p>
+      </div>
+    <% end %>
+
+    <%# New letter form %>
+    <%= form_with model: [@artwork, StudioNote.new],
+    url: artwork_studio_notes_path(artwork_slug: @artwork.slug),
+        local: false,
+        html: { style: "display: grid; gap: 1rem;" } do |f| %>
+      <div>
+        <%= f.label :body, "Write a letter",
+            style: "display: block; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: #3a3028; margin-bottom: 0.5rem;" %>
+        <%= f.text_area :body,
+            rows: 6,
+            placeholder: "What were you thinking when you made this? What do you want to remember?",
+            style: "
+              width: 100%;
+              background: #1a1612;
+              border: 1px solid #2a251e;
+              border-radius: 6px;
+              padding: 1rem;
+              color: #f0e6d3;
+              font-family: 'DM Mono', monospace;
+              font-size: 0.8rem;
+              line-height: 1.8;
+              resize: vertical;
+              outline: none;
+            " %>
+      </div>
+      <%= f.submit "Save Letter",
+          style: "
+            background: none;
+            border: 1px solid #c4933f;
+            color: #c4933f;
+            padding: 0.65rem 1.5rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            width: fit-content;
+          " %>
+    <% end %>
+
+  </div>
+
+</div>
