@@ -8,11 +8,25 @@
 
 ---
 
+[![Ruby](https://img.shields.io/badge/Ruby-3.2+-red.svg)](https://www.ruby-lang.org/)
+[![Rails](https://img.shields.io/badge/Rails-8.1-CC0000.svg)](https://rubyonrails.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 </div>
 
 ## What is this?
 
 The Studio is a full-stack Rails application built as a birthday gift for a fine artist. It gives a working artist everything they need to manage their body of work privately and present it publicly — without paying for Squarespace, fumbling with spreadsheets, or assembling gallery submissions by hand.
+
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Deployment](#deployment)
+- [Easter Eggs](#easter-eggs)
+- [Screenshots](#screenshots)
+- [License](#license)
 
 ## Features
 
@@ -211,13 +225,20 @@ This app. The actual gift.
 
 > *Coming soon — will be added after the birthday reveal.*
 
+<!-- You can use a table to display screenshots beautifully side-by-side -->
+| Dashboard | Public Portfolio (Classic) | Public Portfolio (Raw) |
+| :---: | :---: | :---: |
+| <img src="https://via.placeholder.com/400x250?text=Dashboard" alt="Dashboard" /> | <img src="https://via.placeholder.com/400x250?text=Classic+Mode" alt="Classic Mode" /> | <img src="https://via.placeholder.com/400x250?text=Raw+Mode" alt="Raw Mode" /> |
+
 ---
 
 ## License
 
 Private. Built for one person specifically.
+Initially private and built for one person specifically.
 
 That said — if you're reading this and want to build something similar for someone you care about, take whatever's useful.
+Available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ---
 
