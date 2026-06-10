@@ -1,20 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Analytics — The Studio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0a0907; color: #f0e6d3; font-family: "DM Mono", monospace; -webkit-font-smoothing: antialiased; }
-    a { text-decoration: none; color: inherit; }
-
-    .page { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-
     .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
     @media(max-width:768px) { .metric-row { grid-template-columns: repeat(2,1fr); } }
 
@@ -113,8 +98,6 @@
       letter-spacing: 0.1em;
     }
   </style>
-</head>
-<body>
 
   <%# Inject Rails data as JS %>
   <script>
@@ -129,16 +112,7 @@
     };
   </script>
 
-  <%# Reuse the admin nav from layout — manual here since layout: false isn't set %>
-  <nav style="background:#111009;border-bottom:1px solid #1e1b14;padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;">
-    <a href="/" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:#f0e6d3;">The Studio</a>
-    <div style="display:flex;gap:2rem;align-items:center;">
-      <%= link_to "All Works", artworks_path, style:"font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5a4e3a;" %>
-      <%= link_to "Analytics", analytics_path, style:"font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#c4933f;" %>
-    </div>
-  </nav>
-
-  <div class="page">
+  <div>
 
     <%# Header %>
     <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2.5rem;">
@@ -413,6 +387,3 @@
       }, 120);
     }
   </script>
-
-</body>
-</html>
