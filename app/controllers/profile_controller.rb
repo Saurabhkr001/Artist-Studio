@@ -5,9 +5,14 @@ class ProfileController < ApplicationController
   end
 
   def update
-    if current_user.update(profile_params)
-      redirect_to root_path, notice: "Profile updated."
+    p_params = profile_params
+    if current_user.update(p_params)
+      current_user.avatar.purge if ActiveModel::Type::Boolean.new.cast(params[:remove_avatar] || params.dig(:user, :remove_avatar)) && p_params[:avatar].blank?
+      current_user.cover_image.purge if ActiveModel::Type::Boolean.new.cast(params[:remove_cover_image] || params.dig(:user, :remove_cover_image)) && p_params[:cover_image].blank?
+
+      redirect_to edit_profile_path, notice: "Profile updated successfully.", status: :see_other
     else
+      flash.now[:alert] = "Failed to update profile."
       render :edit, status: :unprocessable_entity
     end
   end

@@ -19,9 +19,11 @@
         </label>
         <div style="display:flex;align-items:center;gap:1.5rem;">
           <% if current_user.avatar.attached? %>
-            <div style="width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid #2a251e;flex-shrink:0;">
-              <%= image_tag current_user.avatar,
-                  style: "width:100%;height:100%;object-fit:cover;" %>
+            <div id="avatar-preview" style="width:80px;height:80px;border-radius:50%;overflow:hidden;border:2px solid #2a251e;flex-shrink:0;">
+              <a href="javascript:void(0)" onclick="openLightbox('<%= url_for(current_user.avatar) %>')" style="display:block;width:100%;height:100%;" title="View full image">
+                <%= image_tag current_user.avatar,
+                    style: "width:100%;height:100%;object-fit:cover;" %>
+              </a>
             </div>
           <% else %>
             <div style="width:80px;height:80px;border-radius:50%;background:#1a1612;border:2px dashed #2a251e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -29,8 +31,17 @@
             </div>
           <% end %>
           <div style="flex:1;">
-            <%= f.file_field :avatar, accept: "image/*",
-                style: "width:100%;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;file-selector-button-background:#1a1612;" %>
+        <label style="display:inline-block;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;background:#1a1612;border:1px solid #2a251e;padding:0.4rem 0.75rem;border-radius:4px;">
+          <span id="avatar-btn-text"><%= current_user.avatar.attached? ? "Change Picture" : "Choose Picture" %></span>
+          <%= f.file_field :avatar, accept: "image/*", style: "display:none;", onchange: "document.getElementById('avatar-file-name').textContent = this.files[0] ? this.files[0].name : ''; document.getElementById('avatar-btn-text').textContent = this.files[0] ? 'Change Picture' : '#{current_user.avatar.attached? ? "Change Picture" : "Choose Picture"}'; const removeCb = document.querySelector('input[name=\"user[remove_avatar]\"]'); if(removeCb && this.files[0]) { removeCb.checked = false; const lbl = removeCb.parentElement; lbl.style.background = '#1a1612'; lbl.style.color = '#a83232'; lbl.querySelector('span').textContent = 'Remove'; const prev = document.getElementById('avatar-preview'); if(prev) prev.style.display = 'block'; }" %>
+        </label>
+        <% if current_user.avatar.attached? %>
+          <label style="display:inline-block;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a83232;background:#1a1612;border:1px solid #4a1c1c;padding:0.4rem 0.75rem;border-radius:4px;margin-left:0.5rem;">
+            <%= check_box_tag "user[remove_avatar]", "1", false, style: "display:none;", onchange: "const lbl=this.parentElement; const txt=lbl.querySelector('span'); const prev=document.getElementById('avatar-preview'); const fileInput=document.getElementById('user_avatar'); if(this.checked){lbl.style.background='#4a1c1c';lbl.style.color='#f0e6d3';txt.textContent='Pending Removal (Save)';if(prev)prev.style.display='none';if(fileInput)fileInput.value='';document.getElementById('avatar-file-name').textContent='';const btnTxt=document.getElementById('avatar-btn-text');if(btnTxt)btnTxt.textContent='#{current_user.avatar.attached? ? "Change Picture" : "Choose Picture"}';}else{lbl.style.background='#1a1612';lbl.style.color='#a83232';txt.textContent='Remove';if(prev)prev.style.display='block';}" %>
+            <span>Remove</span>
+          </label>
+        <% end %>
+        <span id="avatar-file-name" style="font-family:'DM Mono',monospace;font-size:0.72rem;color:#5a4e3a;margin-left:0.5rem;"></span>
             <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
               Shown in a round frame on your portfolio. Square crop recommended.
             </p>
@@ -44,17 +55,28 @@
           Cover Image
         </label>
         <% if current_user.cover_image.attached? %>
-          <div style="width:100%;height:120px;border-radius:8px;overflow:hidden;margin-bottom:0.75rem;border:1px solid #2a251e;">
-            <%= image_tag current_user.cover_image,
-                style: "width:100%;height:100%;object-fit:cover;opacity:0.7;" %>
+          <div id="cover-preview" style="width:100%;height:120px;border-radius:8px;overflow:hidden;margin-bottom:0.75rem;border:1px solid #2a251e;">
+            <a href="javascript:void(0)" onclick="openLightbox('<%= url_for(current_user.cover_image) %>')" style="display:block;width:100%;height:100%;" title="View full image">
+              <%= image_tag current_user.cover_image,
+                  style: "width:100%;height:100%;object-fit:cover;opacity:0.7;" %>
+            </a>
           </div>
         <% else %>
           <div style="width:100%;height:80px;border-radius:8px;background:#1a1612;border:2px dashed #2a251e;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
             <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#2a251e;">No cover image yet</span>
           </div>
         <% end %>
-        <%= f.file_field :cover_image, accept: "image/*",
-            style: "width:100%;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;" %>
+    <label style="display:inline-block;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a89880;background:#1a1612;border:1px solid #2a251e;padding:0.4rem 0.75rem;border-radius:4px;">
+      <span id="cover-btn-text"><%= current_user.cover_image.attached? ? "Change Cover Image" : "Choose Cover Image" %></span>
+      <%= f.file_field :cover_image, accept: "image/*", style: "display:none;", onchange: "document.getElementById('cover-file-name').textContent = this.files[0] ? this.files[0].name : ''; document.getElementById('cover-btn-text').textContent = this.files[0] ? 'Change Cover Image' : '#{current_user.cover_image.attached? ? "Change Cover Image" : "Choose Cover Image"}'; const removeCb = document.querySelector('input[name=\"user[remove_cover_image]\"]'); if(removeCb && this.files[0]) { removeCb.checked = false; const lbl = removeCb.parentElement; lbl.style.background = '#1a1612'; lbl.style.color = '#a83232'; lbl.querySelector('span').textContent = 'Remove'; const prev = document.getElementById('cover-preview'); if(prev) prev.style.display = 'block'; }" %>
+    </label>
+    <% if current_user.cover_image.attached? %>
+      <label style="display:inline-block;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.72rem;color:#a83232;background:#1a1612;border:1px solid #4a1c1c;padding:0.4rem 0.75rem;border-radius:4px;margin-left:0.5rem;">
+        <%= check_box_tag "user[remove_cover_image]", "1", false, style: "display:none;", onchange: "const lbl=this.parentElement; const txt=lbl.querySelector('span'); const prev=document.getElementById('cover-preview'); const fileInput=document.getElementById('user_cover_image'); if(this.checked){lbl.style.background='#4a1c1c';lbl.style.color='#f0e6d3';txt.textContent='Pending Removal (Save)';if(prev)prev.style.display='none';if(fileInput)fileInput.value='';document.getElementById('cover-file-name').textContent='';const btnTxt=document.getElementById('cover-btn-text');if(btnTxt)btnTxt.textContent='#{current_user.cover_image.attached? ? "Change Cover Image" : "Choose Cover Image"}';}else{lbl.style.background='#1a1612';lbl.style.color='#a83232';txt.textContent='Remove';if(prev)prev.style.display='block';}" %>
+        <span>Remove</span>
+      </label>
+    <% end %>
+    <span id="cover-file-name" style="font-family:'DM Mono',monospace;font-size:0.72rem;color:#5a4e3a;margin-left:0.5rem;"></span>
         <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
           Used as the hero background on your portfolio. Wide landscape image works best.
         </p>
@@ -95,4 +117,24 @@
 
     </div>
   <% end %>
+
+  <%# ── LIGHTBOX DIALOG ── %>
+  <dialog id="image-lightbox" style="background:transparent;border:none;margin:auto;max-width:90vw;max-height:90vh;padding:0;" class="backdrop:bg-black/90 backdrop:backdrop-blur-sm">
+    <form method="dialog" style="display:flex;align-items:center;justify-content:center;height:100%;">
+      <img id="lightbox-img" src="" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px;">
+      <button type="submit" style="position:fixed;top:1.5rem;right:1.5rem;background:#1a1612;border:1px solid #c4933f;color:#c4933f;width:2.5rem;height:2.5rem;border-radius:50%;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.2s;" onmouseover="this.style.background='#c4933f';this.style.color='#1a1612';" onmouseout="this.style.background='#1a1612';this.style.color='#c4933f';">&times;</button>
+    </form>
+  </dialog>
+
+  <script>
+    function openLightbox(url) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('image-lightbox').showModal();
+    }
+
+    // Close the dialog when clicking outside the image
+    document.getElementById('image-lightbox').addEventListener('click', function(e) {
+      if (e.target === this) this.close();
+    });
+  </script>
 </div>
