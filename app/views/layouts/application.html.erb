@@ -18,27 +18,41 @@
   <body class="h-full bg-canvas font-sans antialiased">
 
     <% if user_signed_in? %>
-      <nav class="bg-canvas2 border-b border-canvas3 px-8 py-5 flex items-center justify-between">
-        <%= link_to root_path, class: "font-display text-2xl italic text-cream" do %>
-          The Studio
-        <% end %>
-        <div class="flex items-center gap-8">
-          <%= link_to "Portfolio ↗", portfolio_path,
-              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors",
-              target: "_blank" %>
-          <%= link_to "Profile", edit_profile_path,
-              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
-          <%= link_to "All Works", artworks_path,
-              class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
-          <%= link_to "+ Add Artwork", new_artwork_path,
-              class: "font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all" %>
-          <%= link_to "Sign Out", destroy_user_session_path,
-              data: { turbo_method: :delete },
-              class: "font-mono text-xs uppercase tracking-widest text-stone-600 hover:text-cream transition-colors" %>
-              <%= link_to "Analytics", analytics_path,
-    class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors" %>
+      <nav class="bg-canvas2 border-b border-canvas3 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between gap-4 min-w-0">
+        <div class="flex flex-wrap items-center gap-4 md:gap-10 min-w-0">
+          <%= link_to root_path, class: "font-display text-2xl italic text-cream whitespace-nowrap flex-shrink-0" do %>
+            The Studio
+          <% end %>
+          
+          <div class="flex flex-wrap items-center gap-4 md:gap-6">
+            <%= link_to "All Works", artworks_path,
+                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" %>
+            <%= link_to "Analytics", analytics_path,
+                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" %>
+            <%= link_to "Portfolio ↗", portfolio_path,
+                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap",
+                target: "_blank" %>
+          </div>
         </div>
 
+        <div class="flex flex-wrap items-center gap-4 md:gap-6 flex-shrink-0">
+          <%= link_to "+ Add Artwork", new_artwork_path,
+              class: "font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all whitespace-nowrap" %>
+          
+          <div class="hidden sm:block h-6 w-px bg-stone-800"></div>
+          
+          <%= link_to edit_profile_path,
+              class: "flex items-center gap-2.5 font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" do %>
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar.variant(resize_to_fill: [64, 64]),
+                            class: "w-8 h-8 flex-shrink-0 rounded-full object-cover border border-stone-600 ring-1 ring-stone-700" %>
+            <% end %>
+          <% end %>
+
+          <%= link_to "Sign Out", destroy_user_session_path,
+              data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to sign out?", confirm_button_text: "Sign Out" },
+              class: "font-mono text-xs uppercase tracking-widest text-stone-600 hover:text-cream transition-colors whitespace-nowrap" %>
+        </div>
       </nav>
     <% end %>
 
@@ -231,5 +245,35 @@
       </footer>
     <% end %>
 
+    <dialog id="turbo-confirm" class="bg-canvas2 border border-ochre p-8 backdrop:bg-black/80 backdrop:backdrop-blur-sm m-auto max-w-sm w-full shadow-2xl">
+      <form method="dialog">
+        <h3 class="font-display text-2xl italic mb-3 text-center text-cream">Please Confirm</h3>
+        <p id="turbo-confirm-message" class="font-mono text-sm text-stone-400 mb-8 text-center leading-relaxed"></p>
+        <div class="flex items-center justify-center gap-6">
+          <button value="cancel" autofocus class="font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors">Cancel</button>
+          <button value="confirm" id="turbo-confirm-accept" class="font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      document.addEventListener("turbo:confirm", (event) => {
+        event.preventDefault();
+        const dialog = document.getElementById("turbo-confirm");
+        document.getElementById("turbo-confirm-message").textContent = event.detail.message;
+        
+        const confirmButton = document.getElementById("turbo-confirm-accept");
+        const customText = event.target.getAttribute("data-confirm-button-text") || "Confirm";
+        confirmButton.textContent = customText;
+
+        dialog.returnValue = "";
+        dialog.showModal();
+        dialog.addEventListener("close", () => {
+          if (dialog.returnValue === "confirm") {
+            event.detail.resume();
+          }
+        }, { once: true });
+      });
+    </script>
   </body>
 </html>
