@@ -200,6 +200,15 @@
 
   input::placeholder { color: rgba(240, 230, 211, 0.2); }
 
+  /* ── AUTOFILL FIX ── */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: #d4ae67 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
   /* ── FIELD GROUPS ── */
   .field { margin-bottom: 1rem; }
   .field:last-of-type { margin-bottom: 0; }
