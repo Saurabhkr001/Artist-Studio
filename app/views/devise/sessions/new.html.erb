@@ -279,6 +279,15 @@
 
     input::placeholder { color: rgba(240, 230, 211, 0.2); }
 
+    /* ── AUTOFILL FIX ── */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-text-fill-color: #f0e6d3 !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     /* ── FIELD GROUPS ── */
     .field { margin-bottom: 0.85rem; } /* FIX: tighter gap between fields */
     .field { margin-bottom: 1rem; }
@@ -311,8 +320,8 @@
       height: 14px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 3px;
-      background: rgba(255, 255, 255, 0.04);
-      accent-color: var(--glow-color);
+      background: transparent;
+      accent-color: #c99c4a;
       cursor: pointer;
       flex-shrink: 0; /* FIX: prevent checkbox from collapsing */
     }
@@ -387,9 +396,7 @@
     .card-footer {
       text-align: center;
       margin-top: 1.25rem; /* FIX: consistent bottom spacing */
-      font-size: 0.6rem; /* FIX: slightly more readable */
-      margin-top: 1.25rem;
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       letter-spacing: 0.08em;
       color: rgba(240, 230, 211, 0.22);
     }
