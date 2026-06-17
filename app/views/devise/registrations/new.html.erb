@@ -282,42 +282,15 @@
 
   .card-footer a:hover { color: rgba(var(--glow-rgb), 0.7); }
 
-  /* ── TOAST POPUPS (FLASH) ── */
-  .toast-container {
-    position: fixed;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none;
+  /* ── PASSWORD VISIBILITY BUTTON ── */
+  .visibility-toggle-btn {
+    opacity: 0.6;
+    transition: all 0.3s ease;
   }
 
-  .toast {
-    background: rgba(20, 10, 10, 0.85);
-    border: 1px solid rgba(217, 79, 61, 0.4);
-    box-shadow: 0 4px 15px rgba(217, 79, 61, 0.15);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: #f0e6d3;
-    padding: 0.8rem 1.5rem;
-    border-radius: 30px;
-    font-family: "DM Mono", monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    text-align: center;
-    animation: toastEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards, toastExit 0.4s ease 4s forwards;
-  }
-
-  @keyframes toastEnter {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes toastExit {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-20px); }
+  .visibility-toggle-btn:hover {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(var(--glow-rgb), 0.6));
   }
 
   /* ── CLICK BUBBLES ── */
@@ -352,15 +325,6 @@
 </style>
 
 <div class="auth-page-container">
-  <div class="toast-container">
-    <% flash.each do |key, value| %>
-      <div class="toast"><%= value %></div>
-    <% end %>
-    <% resource.errors.full_messages.each do |msg| %>
-      <div class="toast"><%= msg %></div>
-    <% end %>
-  </div>
-
   <div class="lamp-cord"></div>
   <div class="lamp-bulb"></div>
   <div class="lamp-cone"></div>
@@ -392,12 +356,40 @@
                   <span style="font-size: 0.45rem; letter-spacing: 0.1em; color: rgba(240, 230, 211, 0.3); text-transform: uppercase;">(<%= @minimum_password_length %> chars min)</span>
                 <% end %>
               </div>
-              <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••" %>
+              <div data-controller="password-visibility" style="position: relative; display: block;">
+                <%= f.password_field :password, 
+                    autocomplete: "new-password", 
+                    placeholder: "••••••••",
+                    data: { password_visibility_target: "input" },
+                    style: "padding-right: 2.5rem; width: 100%;" %>
+                <button type="button" class="visibility-toggle-btn" data-action="click->password-visibility#toggle" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                  <span data-password-visibility-target="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; color: #f0e6d3;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
             </div>
 
             <div class="field">
               <%= f.label :password_confirmation %>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••" %>
+              <div data-controller="password-visibility" style="position: relative; display: block;">
+                <%= f.password_field :password_confirmation, 
+                    autocomplete: "new-password", 
+                    placeholder: "••••••••",
+                    data: { password_visibility_target: "input" },
+                    style: "padding-right: 2.5rem; width: 100%;" %>
+                <button type="button" class="visibility-toggle-btn" data-action="click->password-visibility#toggle" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; display: flex;">
+                  <span data-password-visibility-target="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; color: #f0e6d3;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
 
