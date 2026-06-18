@@ -4,7 +4,7 @@ class PortfolioController < ApplicationController
   skip_before_action :verify_authenticity_token, only: []
 
   def index
-    @user = User.first
+    @user = current_user
     @artworks = @user.artworks.publicly_visible
 
     if params[:status].present? && Artwork.statuses.key?(params[:status])
@@ -21,7 +21,7 @@ class PortfolioController < ApplicationController
   end
 
   def show
-    @user = User.first
+    @user = current_user
     @artwork = @user.artworks
                     .publicly_visible
                     .find_by(slug: params[:slug])
