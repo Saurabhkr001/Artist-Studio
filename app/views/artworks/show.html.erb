@@ -9,9 +9,9 @@
     <%# ---- IMAGES ---- %>
     <div class="space-y-3">
       <% if @artwork.images.attached? %>
-        <div class="aspect-square bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
+        <div class="bg-stone-100 rounded-2xl overflow-hidden border border-stone-200">
           <%= image_tag @artwork.images.first,
-              class: "w-full h-full object-cover" %>
+              class: "w-full h-auto" %>
         </div>
         <% if @artwork.images.count > 1 %>
           <div class="grid grid-cols-4 gap-2">
