@@ -60,8 +60,7 @@
         {},
         class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 
                 focus:outline-none focus:ring-2 focus:ring-stone-400
-                bg-white text-stone-900
-                [&>option]:bg-white [&>option]:text-stone-900" %>
+                bg-canvas2 text-cream" %>
   </div>
 
   <%# ---- DESCRIPTION ---- %>
@@ -101,7 +100,7 @@
       placeholder="oil, portrait, landscape, impressionist..."
       style="width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;"
     />
-    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#2a251e;margin-top:0.4rem;">
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color: #645034;margin-top:0.4rem;">
       Separate tags with commas — e.g. oil, portrait, figurative, 2023
     </p>
 
@@ -109,7 +108,7 @@
     <% if artwork.tags.any? %>
       <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;">
         <% artwork.tags.each do |tag| %>
-          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:#2a251e;color:#c4933f;border-radius:3px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:#2a251e;color: #c4933f;border-radius:3px;">
             #<%= tag.name %>
           </span>
         <% end %>
