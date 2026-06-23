@@ -4,209 +4,494 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Credits — The Studio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --canvas:   #0f0d0a;
+      --canvas2:  #141109;
+      --canvas3:  #1c1812;
+      --ochre:    #c4933f;
+      --ochre-dim:#8a6628;
+      --cream:    #f0e6d3;
+      --cream-dim:#a89070;
+      --stone:    #5a5040;
+      --rule:     #231f18;
+    }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      background: #faf9f6; /* Bone/Parchment white */
-      color: #1a1a1a;
-      font-family: "Inter", sans-serif;
+      background: var(--canvas);
+      color: var(--cream);
+      font-family: 'DM Mono', monospace;
       overflow-x: hidden;
-      line-height: 1.6;
+      min-height: 100vh;
     }
 
-    .font-serif { font-family: "Playfair Display", serif; }
+    /* ── Back ── */
+    .back {
+      position: fixed;
+      top: 1.75rem;
+      left: 2rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--stone);
+      text-decoration: none;
+      transition: color 0.2s;
+      z-index: 10;
+    }
+    .back:hover { color: var(--ochre); }
 
-    /* Container for a structured, classic scroll */
-    .content-wrapper {
-      max-width: 800px;
+    /* ── Layout ── */
+    .wrap {
+      max-width: 700px;
       margin: 0 auto;
-      padding: 15vh 2rem;
-      text-align: center;
+      padding: 16vh 2rem 10vh;
     }
 
-    /* Section styling */
-    section {
-      margin-bottom: 12rem;
+    /* ── Fade in ── */
+    .fade {
       opacity: 0;
       transform: translateY(20px);
-      transition: all 1s ease-out;
+      transition: opacity 0.9s ease, transform 0.9s ease;
     }
+    .fade.visible { opacity: 1; transform: translateY(0); }
 
-    /* Simple scroll-in effect (No JS needed for a classic feel) */
-    section.visible {
-      opacity: 1;
-      transform: translateY(0);
+    /* ── Dividers ── */
+    .rule-v {
+      width: 1px;
+      height: 56px;
+      background: linear-gradient(to bottom, transparent, var(--ochre-dim), transparent);
+      margin: 0 auto 3.5rem;
     }
-
-    /* Typography */
-    .label {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: #8c8c8c;
-      margin-bottom: 1.5rem;
-      display: block;
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 400;
-      font-style: italic;
-      color: #1a1a1a;
-      margin-bottom: 1rem;
-    }
-
-    .role-title {
-      font-family: "Playfair Display", serif;
-      font-size: 1.8rem;
-      font-weight: 400;
-      margin-bottom: 0.5rem;
-    }
-
-    .name-detail {
-      font-size: 1rem;
-      color: #555;
-      font-style: italic;
-    }
-
-    /* Visual elements */
-    .rule {
-      width: 60px;
+    .rule-h {
+      width: 100%;
       height: 1px;
-      background: #d4af37; /* Subtle Gold */
-      margin: 3rem auto;
-    }
-
-    .classic-border {
-      border: 1px solid #e5e5e5;
-      padding: 4rem 2rem;
+      background: var(--rule);
       margin: 4rem 0;
     }
 
-    /* Note styling */
-    .note-text {
-      font-family: "Playfair Display", serif;
-      font-size: 1.25rem;
-      line-height: 2;
-      color: #2a2a2a;
-      max-width: 500px;
-      margin: 0 auto;
+    /* ── Labels ── */
+    .label {
+      display: block;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-bottom: 1.25rem;
     }
 
-    .signature {
-      margin-top: 2rem;
+    /* ── Hero ── */
+    .hero { text-align: center; margin-bottom: 7rem; }
+
+    .hero-eyebrow {
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--ochre-dim);
+      margin-bottom: 2rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 6rem);
+      font-weight: 400;
       font-style: italic;
-      color: #d4af37;
+      color: var(--cream);
+      line-height: 1;
+      letter-spacing: -0.01em;
     }
 
-    /* Navigation */
-    .nav-link {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      font-size: 0.7rem;
+    .hero-meta {
+      margin-top: 1.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--stone);
+    }
+    .hero-meta span { color: var(--ochre-dim); margin: 0 0.6rem; }
+
+    /* ── Two-col credit row ── */
+    .credit-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+      padding: 1.75rem 0;
+      align-items: start;
+    }
+    .credit-row:last-child { border-bottom: 1px solid var(--rule); }
+
+    .credit-role {
+      font-size: 0.55rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #1a1a1a;
-      text-decoration: none;
-      border-bottom: 1px solid #1a1a1a;
-      padding-bottom: 4px;
+      color: var(--stone);
+      padding-top: 3px;
+      padding-right: 1.5rem;
     }
 
-    .nav-link:hover { color: #d4af37; border-color: #d4af37; }
+    .credit-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
 
+    .credit-detail {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--cream-dim);
+      margin-bottom: 0.6rem;
+      line-height: 1.7;
+    }
+
+    .credit-links { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+    .credit-link {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ochre-dim);
+      padding-bottom: 1px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .credit-link:hover { color: var(--cream); border-color: var(--cream); }
+
+    /* ── Stack table ── */
+    .stack-section { margin: 4rem 0; }
+
+    .stack-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .stack-table tr { border-top: 1px solid var(--rule); }
+    .stack-table tr:last-child { border-bottom: 1px solid var(--rule); }
+
+    .stack-table td {
+      padding: 1.2rem 0;
+      vertical-align: top;
+    }
+
+    .stack-table td:first-child {
+      width: 140px;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--stone);
+      padding-right: 1.5rem;
+    }
+
+    .stack-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--cream);
+      margin-bottom: 0.15rem;
+    }
+
+    .stack-note {
+      font-size: 0.6rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* ── Commit log ── */
+    .commit-log {
+      background: var(--canvas2);
+      border: 1px solid var(--rule);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .commit-log-header {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .commit {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+    }
+    .commit:last-child { border-bottom: none; }
+
+    .commit-hash {
+      font-size: 0.6rem;
+      color: var(--ochre-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .commit-msg {
+      font-size: 0.65rem;
+      color: var(--cream-dim);
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+    }
+
+    /* ── Note ── */
+    .note-wrap {
+      border-left: 1px solid var(--ochre-dim);
+      padding-left: 2rem;
+      margin: 4rem 0;
+    }
+
+    .note-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      line-height: 1.85;
+      color: var(--cream);
+      opacity: 0.8;
+      margin-bottom: 1.25rem;
+    }
+
+    .note-sig {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ochre-dim);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding-top: 2rem;
+    }
+
+    .footer-text {
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+
+    .footer-text span { color: var(--ochre-dim); margin: 0 0.5rem; }
+
+    @media (max-width: 480px) {
+      .credit-row, .stack-table td:first-child { grid-template-columns: 1fr; }
+      .credit-role, .stack-table td:first-child { margin-bottom: 0.5rem; width: auto; }
+      .commit { grid-template-columns: 50px 1fr; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="content-wrapper">
+  <a href="/" class="back">← The Studio</a>
 
-    <%# ---- TITLE CARD ---- %>
-    <section class="visible">
-      <span class="label">A Commemorative Project</span>
-      <h1 class="font-serif">The Studio</h1>
-      <div class="rule"></div>
-      <p class="name-detail">Edition No. 1 &nbsp;·&nbsp; <%= Date.today.year %></p>
-    </section>
+  <div class="wrap">
 
-    <%# ---- ROLES ---- %>
-    <section class="visible">
-      <span class="label">Directed by</span>
-      <p class="role-title">Your Dev Friend</p>
-      
-      <div style="margin-top: 6rem;">
-        <span class="label">Featuring</span>
-        <p class="role-title">The Artist</p>
-        <p class="name-detail">In his most prolific year yet</p>
-      </div>
+    <!-- HERO -->
+    <div class="fade visible hero">
+      <div class="rule-v"></div>
+      <p class="hero-eyebrow">A commemorative project<span style="margin:0 1rem;color:#3a3028;">·</span>Built with intent</p>
+      <h1 class="hero-title">The Studio</h1>
+      <p class="hero-meta">
+        Edition No. 1 <span>·</span> <%= Date.today.year %> <span>·</span> v1.0.0
+      </p>
+    </div>
 
-      <div style="margin-top: 6rem;">
-        <span class="label">Platform Architecture</span>
-        <p class="role-title">Ruby on Rails</p>
-        <p class="name-detail">The engine beneath the canvas</p>
-      </div>
-    </section>
+    <!-- CREDITS -->
+    <div class="fade">
+      <span class="label">Project Credits</span>
 
-    <%# ---- TECHNICALS ---- %>
-    <section class="visible">
-      <div class="classic-border">
-        <span class="label">Technical Specifications</span>
-        <div style="margin: 2rem 0;">
-          <p style="margin-bottom: 1.5rem;"><strong>Architecture:</strong> Custom Crafted Ruby</p>
-          <p style="margin-bottom: 1.5rem;"><strong>Curation:</strong> Human Driven</p>
-          <p><strong>QA:</strong> Minimalist Approach</p>
+      <div class="credit-row">
+        <span class="credit-role">Engineering</span>
+        <div>
+          <p class="credit-name">Saurabh Kumar</p>
+          <p class="credit-detail">
+            Software Engineer at Chetu Inc., Noida<br>
+            Ruby on Rails · REST APIs · Third-party integrations
+          </p>
+          <div class="credit-links">
+            <a href="https://github.com/Saurabhkr001" class="credit-link" target="_blank" rel="noopener">GitHub ↗</a>
+            <a href="https://www.linkedin.com/in/saurabh-kumar-401b42212/" class="credit-link" target="_blank" rel="noopener">LinkedIn ↗</a>
+          </div>
         </div>
       </div>
-    </section>
 
-    <%# ---- HUMOR SECTION ---- %>
-    <section class="visible">
-      <span class="label">Special Acknowledgments</span>
-      <p class="role-title" style="font-size: 1.4rem;">Stack Overflow</p>
-      <p class="name-detail">For solving bugs I didn't know I had</p>
-      
-      <div style="margin-top: 4rem;">
-        <p class="role-title" style="font-size: 1.4rem;">Caffeine</p>
-        <p class="name-detail">The silent partner in development</p>
+      <div class="credit-row">
+        <span class="credit-role">For</span>
+        <div>
+          <p class="credit-name">The Artist</p>
+          <p class="credit-detail">
+            In his most prolific year yet —<br>
+            a space built to catalog, exhibit, and remember.
+          </p>
+        </div>
       </div>
-    </section>
 
-    <%# ---- PERSONAL NOTE ---- %>
-    <section class="visible">
-      <div class="note-text">
-        "I watched you choose paint when I chose code. 
-        It turns out we were both trying to build something 
-        that lasts. This space is yours—to catalog, 
-        to exhibit, and to remember."
-        <p class="signature">— Your Annoying Dev Friend</p>
+      <div class="credit-row">
+        <span class="credit-role">Platform</span>
+        <div>
+          <p class="credit-name">Ruby on Rails 8</p>
+          <p class="credit-detail">The engine beneath the canvas</p>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <%# ---- FOOTER ---- %>
-    <footer>
-      <div class="rule"></div>
-      <p class="label" style="margin-top: 2rem;">© <%= Date.today.year %> &nbsp;·&nbsp; Fin.</p>
+    <div class="rule-h fade"></div>
+
+    <!-- STACK -->
+    <div class="fade stack-section">
+      <span class="label">Technical Specifications</span>
+
+      <table class="stack-table">
+        <tr>
+          <td>Backend</td>
+          <td>
+            <p class="stack-name">Ruby on Rails 8</p>
+            <p class="stack-note">MVC architecture · ActiveRecord ORM · Convention over configuration</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Frontend</td>
+          <td>
+            <p class="stack-name">Hotwire — Turbo + Stimulus</p>
+            <p class="stack-note">SPA-like navigation without the JavaScript overhead</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Styling</td>
+          <td>
+            <p class="stack-name">Tailwind CSS</p>
+            <p class="stack-note">Utility-first · Custom design tokens · Zero dead CSS</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Auth</td>
+          <td>
+            <p class="stack-name">Devise</p>
+            <p class="stack-note">Session management · Secure sign-in and sign-out flows</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Storage</td>
+          <td>
+            <p class="stack-name">Active Storage</p>
+            <p class="stack-note">Artwork uploads · Avatar management · Variant processing</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Database</td>
+          <td>
+            <p class="stack-name">PostgreSQL</p>
+            <p class="stack-note">Relational data · Full-text search · Production-ready</p>
+          </td>
+        </tr>
+        <tr>
+          <td>Typography</td>
+          <td>
+            <p class="stack-name">Cormorant Garamond + DM Mono</p>
+            <p class="stack-note">Display serif paired with a technical monospace — editorial meets precise</p>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Commit log easter egg -->
+      <div class="commit-log">
+        <p class="commit-log-header">Recent commit history</p>
+
+        <div class="commit">
+          <span class="commit-hash">a3f91c</span>
+          <span class="commit-msg">feat: add custom turbo confirm dialog with ochre aesthetic</span>
+        </div>
+        <div class="commit">
+          <span class="commit-hash">7d2e08</span>
+          <span class="commit-msg">feat: portfolio analytics dashboard with chart breakdowns</span>
+        </div>
+        <div class="commit">
+          <span class="commit-hash">c91bb4</span>
+          <span class="commit-msg">feat: artwork upload with active storage variant processing</span>
+        </div>
+        <div class="commit">
+          <span class="commit-hash">5f3a12</span>
+          <span class="commit-msg">fix: devise sign out now uses turbo delete method correctly</span>
+        </div>
+        <div class="commit">
+          <span class="commit-hash">2b8d77</span>
+          <span class="commit-msg">chore: too many commits. worth it.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-h fade"></div>
+
+    <!-- ACKNOWLEDGEMENTS -->
+    <div class="fade">
+      <span class="label">Special Thanks</span>
+
+      <div class="credit-row">
+        <span class="credit-role">Problem solving</span>
+        <div>
+          <p class="credit-name">Stack Overflow</p>
+          <p class="credit-detail">For the answers, and the humbling reminder that someone always asked this before.</p>
+        </div>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-role">Infrastructure</span>
+        <div>
+          <p class="credit-name">Caffeine</p>
+          <p class="credit-detail">Silent co-founder. Equity undisclosed.</p>
+        </div>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-role">Inspiration</span>
+        <div>
+          <p class="credit-name">The Artist's Work</p>
+          <p class="credit-detail">Every design decision started by looking at what the art deserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-h fade"></div>
+
+    <!-- NOTE -->
+    <div class="fade">
+      <div class="note-wrap">
+        <p class="note-text">
+          I watched you choose paint when I chose code.
+          It turns out we were both trying to build something that lasts.
+          This space is yours — to catalog, to exhibit, and to remember.
+        </p>
+        <p class="note-sig">— Your Annoying Dev Friend</p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer fade">
+      <div class="rule-h"></div>
+      <p class="footer-text">
+        © <%= Date.today.year %> The Studio <span>·</span> Saurabh Kumar <span>·</span> Fin.
+      </p>
     </footer>
 
   </div>
 
-  <a href="/" class="nav-link">Return to Dashboard →</a>
-
   <script>
-    // Simple intersection observer to fade in sections as he scrolls
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('section').forEach(section => {
-      observer.observe(section);
-    });
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.fade').forEach(el => observer.observe(el));
   </script>
 
 </body>
