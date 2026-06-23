@@ -252,14 +252,76 @@
       </footer>
     <% end %>
 
-    <dialog id="turbo-confirm" class="bg-canvas2 border border-ochre p-8 backdrop:bg-black/80 backdrop:backdrop-blur-sm m-auto max-w-sm w-full shadow-2xl">
+    <dialog id="turbo-confirm" style="
+      background:#1a1612;
+      border:1px solid #2e2920;
+      border-radius:4px 20px 20px 20px;
+      padding:0;
+      max-width:320px;
+      width:calc(100% - 2rem);
+      margin:auto;
+      box-shadow:0 24px 60px rgba(0,0,0,0.7);
+      outline:none;
+    " class="backdrop:bg-black/70 backdrop:backdrop-blur-md">
       <form method="dialog">
-        <h3 class="font-display text-2xl italic mb-3 text-center text-cream">Please Confirm</h3>
-        <p id="turbo-confirm-message" class="font-mono text-sm text-stone-400 mb-8 text-center leading-relaxed"></p>
-        <div class="flex items-center justify-center gap-6">
-          <button value="cancel" autofocus class="font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors">Cancel</button>
-          <button value="confirm" id="turbo-confirm-accept" class="font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all">Confirm</button>
+
+        <%# Header %>
+        <div style="padding:1.75rem 1.75rem 1.25rem; border-bottom:1px solid #2e2920;">
+          <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:0.875rem;">
+            <div style="
+              width:34px;height:34px;flex-shrink:0;
+              border:1px solid #c4933f;
+              display:flex;align-items:center;justify-content:center;
+            ">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c4933f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </div>
+            <span style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#5a5040;">Confirmation required</span>
+          </div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:#f0e6d3;margin:0 0 0.4rem;line-height:1.2;">Sign out?</p>
+          <p id="turbo-confirm-message" style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#6b5f4e;line-height:1.6;margin:0;"></p>
         </div>
+
+        <%# Actions %>
+        <div style="display:flex;">
+          <button value="cancel" autofocus style="
+            flex:1;
+            font-family:'DM Mono',monospace;
+            font-size:0.65rem;
+            letter-spacing:0.12em;
+            text-transform:uppercase;
+            color:#5a5040;
+            background:transparent;
+            border:none;
+            border-right:1px solid #2e2920;
+            padding:1.1rem;
+            cursor:pointer;
+            transition:color 0.2s, background 0.2s;
+          " onmouseover="this.style.color='#f0e6d3';this.style.background='#211d18'"
+            onmouseout="this.style.color='#5a5040';this.style.background='transparent'">
+            Cancel
+          </button>
+          <button value="confirm" id="turbo-confirm-accept" style="
+            flex:1;
+            font-family:'DM Mono',monospace;
+            font-size:0.65rem;
+            letter-spacing:0.12em;
+            text-transform:uppercase;
+            color:#c4933f;
+            background:transparent;
+            border:none;
+            padding:1.1rem;
+            cursor:pointer;
+            transition:color 0.2s, background 0.2s;
+          " onmouseover="this.style.color='#1a1612';this.style.background='#c4933f'"
+            onmouseout="this.style.color='#c4933f';this.style.background='transparent'">
+            Sign out
+          </button>
+        </div>
+
       </form>
     </dialog>
 
