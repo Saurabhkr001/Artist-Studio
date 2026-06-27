@@ -1,38 +1,165 @@
 @import "tailwindcss";
 
-/* Base dark gallery theme */
+/* ══════════════════════════════════════════
+   THE STUDIO — Global Design System
+   ══════════════════════════════════════════ */
+
+/* ── BASE DARK GALLERY THEME ── */
 body {
   background-color: #16130f;
   color: #f0e6d3;
   font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── SMOOTH PAGE LOAD ── */
+@keyframes pageReveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+body {
+  animation: pageReveal 0.5s ease-out forwards;
+}
+
+/* ── GLOBAL TRANSITIONS ── */
+a, button {
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f0d0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a251e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4933f;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a251e #0f0d0a;
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════ */
 nav {
-  background-color: #1f1b16;
+  background: rgba(31, 27, 22, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid #2a251e;
+  position: relative;
+}
+nav::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196, 147, 63, 0.3), transparent);
+  pointer-events: none;
 }
 
 nav a, nav span {
   color: #a89880;
 }
-
 nav a:hover {
   color: #f0e6d3;
 }
 
+/* ── FOOTER ── */
 footer {
   border-top: 1px solid #2a251e;
   color: #a89880;
 }
 
-/* Cards */
+/* ══════════════════════════════════════════
+   UTILITY CLASSES
+   ══════════════════════════════════════════ */
+
+/* ── GLASSMORPHISM CARD ── */
+.glass-card {
+  background: linear-gradient(145deg, rgba(31, 27, 22, 0.8), rgba(22, 19, 15, 0.6));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(196, 147, 63, 0.08);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: rgba(196, 147, 63, 0.15);
+}
+
+/* ── OCHRE GLOW BORDER ── */
+.glow-border {
+  border: 1px solid rgba(196, 147, 63, 0.15);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glow-border:hover,
+.glow-border:focus-within {
+  border-color: rgba(196, 147, 63, 0.35);
+  box-shadow: 0 0 20px rgba(196, 147, 63, 0.08);
+}
+
+/* ── HOVER LIFT ── */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ── FADE IN UP (for JS IntersectionObserver) ── */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── STAGGER DELAYS ── */
+.stagger-1 { transition-delay: 0.05s; }
+.stagger-2 { transition-delay: 0.1s; }
+.stagger-3 { transition-delay: 0.15s; }
+.stagger-4 { transition-delay: 0.2s; }
+.stagger-5 { transition-delay: 0.25s; }
+.stagger-6 { transition-delay: 0.3s; }
+.stagger-7 { transition-delay: 0.35s; }
+.stagger-8 { transition-delay: 0.4s; }
+
+/* ══════════════════════════════════════════
+   CARD STYLES
+   ══════════════════════════════════════════ */
 .card {
   background-color: #1f1b16;
   border: 1px solid #2a251e;
   border-radius: 1rem;
 }
 
-/* Override Tailwind whites and light grays */
+/* ══════════════════════════════════════════
+   TAILWIND OVERRIDES — DARK MODE
+   ══════════════════════════════════════════ */
 .bg-white { background-color: #1f1b16 !important; }
 .bg-stone-50 { background-color: #16130f !important; }
 .bg-stone-100 { background-color: #2a251e !important; }
@@ -46,17 +173,21 @@ footer {
 .border-stone-200 { border-color: #2a251e !important; }
 .border-stone-300 { border-color: #33291f !important; }
 
-/* Ochre accent */
+/* Ochre accent buttons */
 .bg-stone-900 { background-color: #c4933f !important; }
 .hover\:bg-stone-700:hover { background-color: #a37830 !important; }
 .text-white { color: #16130f !important; }
 
-/* Headings */
+/* ══════════════════════════════════════════
+   TYPOGRAPHY
+   ══════════════════════════════════════════ */
 h1, h2, h3 {
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
-/* Stat cards */
+/* ══════════════════════════════════════════
+   STAT / ALERT CARD OVERRIDES
+   ══════════════════════════════════════════ */
 .bg-amber-50 { background-color: #2a231a !important; }
 .border-amber-200 { border-color: #5a3e1b !important; }
 .text-amber-900 { color: #f0d080 !important; }
@@ -68,10 +199,18 @@ h1, h2, h3 {
 .bg-blue-100 { background-color: #1a2030 !important; }
 .text-blue-700 { color: #6a90d8 !important; }
 
+/* Error styling */
+.bg-red-50 { background-color: #2a1a1a !important; }
+.border-red-200 { border-color: #4a1c1c !important; }
+.text-red-800 { color: #f0a0a0 !important; }
+.text-red-700 { color: #e07070 !important; }
+
 /* Focus rings */
 .focus\:ring-stone-400:focus { --tw-ring-color: #c4933f !important; }
 
-/* Devise form colors */
+/* ══════════════════════════════════════════
+   DEVISE / AUTH UTILITIES
+   ══════════════════════════════════════════ */
 .bg-canvas { background-color: #16130f; }
 .bg-canvas2 { background-color: #1f1b16; }
 .border-canvas3 { border-color: #2a251e; }
@@ -86,20 +225,256 @@ h1, h2, h3 {
 .font-display { font-family: "Cormorant Garamond", Georgia, serif; }
 .placeholder-stone-600::placeholder { color: #57534e; }
 
-/* Thin white border on all artwork images */
+/* ══════════════════════════════════════════
+   FORM INPUTS — GLOBAL DARK THEME
+   ══════════════════════════════════════════ */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="search"],
+textarea,
+select,
+option {
+  background-color: #1a1612 !important;
+  color: #f0e6d3 !important;
+  border-color: #2a251e !important;
+  font-family: "DM Mono", monospace;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #c4933f !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(196, 147, 63, 0.15), 0 0 15px rgba(196, 147, 63, 0.06) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #5a4e3a !important;
+}
+
+/* Autofill fix for dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f0e6d3 !important;
+  -webkit-box-shadow: 0 0 0 30px #1a1612 inset !important;
+  border-color: #2a251e !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  accent-color: #c4933f;
+  background-color: transparent !important;
+}
+
+/* File input styling */
+input[type="file"] {
+  background-color: transparent !important;
+  border: none !important;
+  color: #a89880 !important;
+}
+
+/* ══════════════════════════════════════════
+   ARTWORK IMAGE FRAMES
+   ══════════════════════════════════════════ */
 .art-card img,
 .art-card-image img,
 .artwork-image img {
   border: 1px solid rgb(255, 255, 255);
 }
 
-/* Artwork image frame — separates painting from dark background */
 .artwork-frame {
   border: 1px solid rgb(255, 255, 255);
 }
 
-/* Form select & option styling to match dark theme */
-select, option {
-  background-color: #1f1b16 !important;
-  color: #f0e6d3 !important;
+/* ══════════════════════════════════════════
+   ARTWORK CARD HOVER OVERLAY
+   ══════════════════════════════════════════ */
+.artwork-card-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.artwork-card-wrap .artwork-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 13, 10, 0.9) 0%, rgba(15, 13, 10, 0.4) 40%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  pointer-events: none;
+}
+.artwork-card-wrap:hover .artwork-hover-overlay {
+  opacity: 1;
+}
+.artwork-hover-overlay .overlay-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 300;
+  color: #f0e6d3;
+  line-height: 1.25;
+}
+.artwork-hover-overlay .overlay-meta {
+  font-family: "DM Mono", monospace;
+  font-size: 0.6rem;
+  color: #8a7a65;
+  margin-top: 0.3rem;
+  letter-spacing: 0.05em;
+}
+
+/* ══════════════════════════════════════════
+   PAGINATION — OCHRE THEME
+   ══════════════════════════════════════════ */
+.pagy nav,
+.pagy-nav,
+nav.pagy {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  font-family: "DM Mono", monospace;
+}
+.pagy nav a,
+.pagy-nav a,
+nav.pagy a,
+.pagy nav span,
+.pagy-nav span,
+nav.pagy span {
+  font-size: 0.7rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #2a251e;
+  color: #8a7a65;
+  background: #1a1612;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.pagy nav a:hover,
+.pagy-nav a:hover,
+nav.pagy a:hover {
+  border-color: #c4933f;
+  color: #c4933f;
+  background: rgba(196, 147, 63, 0.06);
+}
+.pagy nav a.current,
+.pagy-nav a.current,
+nav.pagy a.current,
+.pagy nav span.current,
+.pagy-nav span.current,
+nav.pagy span.current,
+.pagy nav .active,
+.pagy-nav .active,
+nav.pagy .active {
+  border-color: #c4933f !important;
+  color: #c4933f !important;
+  background: rgba(196, 147, 63, 0.1) !important;
+}
+
+/* ══════════════════════════════════════════
+   PREMIUM BUTTON STYLES
+   ══════════════════════════════════════════ */
+.btn-primary {
+  background: linear-gradient(135deg, #c4933f, #a37830);
+  color: #0f0d0a;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(196, 147, 63, 0.2);
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(196, 147, 63, 0.35);
+  transform: translateY(-1px);
+}
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-outline {
+  background: none;
+  border: 1px solid #c4933f;
+  color: #c4933f;
+  padding: 0.65rem 1.5rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  background: rgba(196, 147, 63, 0.08);
+  box-shadow: 0 0 20px rgba(196, 147, 63, 0.1);
+}
+
+/* ══════════════════════════════════════════
+   SECTION DIVIDERS
+   ══════════════════════════════════════════ */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #2a251e 20%, #2a251e 80%, transparent);
+}
+.divider-ochre {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196, 147, 63, 0.25) 30%, rgba(196, 147, 63, 0.25) 70%, transparent);
+}
+
+/* ══════════════════════════════════════════
+   NOISE TEXTURE OVERLAY (for premium pages)
+   ══════════════════════════════════════════ */
+.noise-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/feTurbulence%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   IMAGE LIGHTBOX DIALOG
+   ══════════════════════════════════════════ */
+dialog#artwork-lightbox {
+  background: transparent;
+  border: none;
+  margin: auto;
+  max-width: 92vw;
+  max-height: 92vh;
+  padding: 0;
+}
+dialog#artwork-lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
