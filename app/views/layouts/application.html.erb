@@ -13,12 +13,79 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <style>
+      /* ── NAV ENTRANCE ── */
+      @keyframes navSlideDown {
+        from { transform: translateY(-100%); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+      }
+      .nav-animated {
+        animation: navSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* ── AVATAR HOVER ── */
+      .avatar-wrap {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .avatar-wrap:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 16px rgba(196, 147, 63, 0.25);
+      }
+
+      /* ── ADD ARTWORK BUTTON GLOW ── */
+      .btn-add-artwork {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .btn-add-artwork::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+        transition: left 0.5s ease;
+      }
+      .btn-add-artwork:hover {
+        box-shadow: 0 0 20px rgba(196, 147, 63, 0.3);
+        transform: translateY(-1px);
+      }
+      .btn-add-artwork:hover::before {
+        left: 100%;
+      }
+
+      /* ── ACTIVE NAV INDICATOR ── */
+      .nav-link-active {
+        color: #c4933f !important;
+        position: relative;
+      }
+      .nav-link-active::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #c4933f;
+      }
+
+      /* ── TURBO PAGE TRANSITION ── */
+      .turbo-progress-bar {
+        height: 2px;
+        background: linear-gradient(90deg, #c4933f, #f0d080);
+      }
+    </style>
   </head>
 
   <body class="h-full bg-canvas font-sans antialiased">
 
     <% if user_signed_in? %>
-      <nav class="bg-canvas2 border-b border-canvas3 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between gap-4 min-w-0">
+      <nav class="nav-animated bg-canvas2 border-b border-canvas3 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between gap-4 min-w-0">
         <div class="flex flex-wrap items-center gap-4 md:gap-10 min-w-0">
           <%= link_to root_path, class: "font-display text-2xl italic text-cream whitespace-nowrap flex-shrink-0" do %>
             The Studio
@@ -26,9 +93,9 @@
           
           <div class="flex flex-wrap items-center gap-4 md:gap-6">
             <%= link_to "All Works", artworks_path,
-                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" %>
+                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'artworks' && action_name == 'index' ? 'nav-link-active' : ''}" %>
             <%= link_to "Analytics", analytics_path,
-                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" %>
+                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'home' && action_name == 'analytics' ? 'nav-link-active' : ''}" %>
             <%= link_to "Portfolio ↗", portfolio_path,
                 class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap",
                 target: "_blank" %>
@@ -37,17 +104,17 @@
 
         <div class="flex flex-wrap items-center gap-4 md:gap-6 flex-shrink-0">
           <%= link_to "+ Add Artwork", new_artwork_path,
-              class: "font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas transition-all whitespace-nowrap" %>
+              class: "btn-add-artwork font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas whitespace-nowrap" %>
           
           <div class="hidden sm:block h-6 w-px bg-stone-800"></div>
           
           <%= link_to edit_profile_path,
-              class: "flex items-center gap-2.5 font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" do %>
+              class: "avatar-wrap flex items-center gap-2.5 font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" do %>
             <% if current_user.avatar.attached? %>
               <%= image_tag current_user.avatar.variant(resize_to_fill: [64, 64]),
                             class: "w-8 h-8 flex-shrink-0 rounded-full object-cover border border-stone-600 ring-1 ring-stone-700" %>
           <% else %>
-            <div class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center border border-stone-600 ring-1 ring-stone-700 bg-stone-900">
+            <div class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center border border-stone-600 ring-1 ring-stone-700 bg-stone-900" style="background: #1a1612 !important;">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/>
                 <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>
@@ -67,7 +134,9 @@
       <div id="toast-wrap" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;pointer-events:none;">
         <div id="toast" style="
           pointer-events:all;
-          background:#1a1612;
+          background:rgba(26,22,18,0.95);
+          backdrop-filter:blur(12px);
+          -webkit-backdrop-filter:blur(12px);
           border:1px solid #c4933f;
           border-radius:16px 16px 4px 16px;
           padding:0.9rem 1.2rem 0.9rem 1rem;
@@ -75,7 +144,7 @@
           align-items:flex-start;
           gap:0.75rem;
           max-width:280px;
-          box-shadow:0 4px 24px rgba(0,0,0,0.5);
+          box-shadow:0 4px 24px rgba(0,0,0,0.5), 0 0 30px rgba(196,147,63,0.08);
           transform:translateY(20px);
           opacity:0;
           transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s ease;
@@ -157,7 +226,9 @@
         <div id="alert-wrap" style="position:fixed;bottom:2rem;left:2rem;z-index:9999;pointer-events:none;">
           <div id="alert-toast" style="
             pointer-events:all;
-            background:#1a1612;
+            background:rgba(26,22,18,0.95);
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
             border:1px solid #a83232;
             border-radius:16px 16px 16px 4px;
             padding:0.9rem 1.2rem 0.9rem 1rem;
@@ -246,6 +317,7 @@
       </main>
 
       <footer class="mt-24 border-t border-canvas3 px-8 py-10 text-center font-mono text-xs text-stone-600">
+        <div class="divider-ochre mb-6" style="max-width:200px;margin-left:auto;margin-right:auto;"></div>
         Built with love, questionable taste, and way too many commits.
         <br>
         <%= link_to "who made this?", "/credits", class: "underline hover:text-ochre transition-colors mt-2 inline-block" %>
@@ -253,14 +325,16 @@
     <% end %>
 
     <dialog id="turbo-confirm" style="
-      background:#1a1612;
+      background:rgba(26,22,18,0.98);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
       border:1px solid #2e2920;
       border-radius:4px 20px 20px 20px;
       padding:0;
       max-width:320px;
       width:calc(100% - 2rem);
       margin:auto;
-      box-shadow:0 24px 60px rgba(0,0,0,0.7);
+      box-shadow:0 24px 60px rgba(0,0,0,0.7), 0 0 40px rgba(196,147,63,0.05);
       outline:none;
     " class="backdrop:bg-black/70 backdrop:backdrop-blur-md">
       <form method="dialog">
@@ -343,6 +417,22 @@
           }
         }, { once: true });
       });
+
+      // ── INTERSECTION OBSERVER FOR FADE-INS ──
+      document.addEventListener("turbo:load", initFadeIns);
+      document.addEventListener("DOMContentLoaded", initFadeIns);
+
+      function initFadeIns() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              observer.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+      }
     </script>
   </body>
 </html>

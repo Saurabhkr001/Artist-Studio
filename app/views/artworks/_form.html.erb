@@ -1,13 +1,16 @@
-<%= form_with model: artwork, class: "space-y-6" do |f| %>
+<%= form_with model: artwork, html: { style: "display:grid;gap:1.75rem;" } do |f| %>
 
   <% if artwork.errors.any? %>
-    <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-      <p class="text-sm font-medium text-red-800 mb-2">
+    <div class="glass-card" style="padding:1.25rem;border-color:rgba(168,50,50,0.3);">
+      <p style="font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;color: #f0a0a0;margin-bottom:0.75rem;">
         <%= pluralize(artwork.errors.count, "error") %> prevented this from saving:
       </p>
-      <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+      <ul style="list-style:none;display:grid;gap:0.35rem;">
         <% artwork.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+          <li style="font-family:'DM Mono',monospace;font-size:0.65rem;color: #e07070;display:flex;align-items:center;gap:0.5rem;">
+            <span style="width:4px;height:4px;border-radius:50%;background: #e07070;flex-shrink:0;"></span>
+            <%= msg %>
+          </li>
         <% end %>
       </ul>
     </div>
@@ -15,76 +18,84 @@
 
   <%# ---- TITLE ---- %>
   <div>
-    <%= f.label :title, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.label :title, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
     <%= f.text_field :title,
-        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400",
-        placeholder: "Untitled (but give it a name)" %>
+        placeholder: "Untitled (but give it a name)",
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
   </div>
 
   <%# ---- MEDIUM + DIMENSIONS ---- %>
-  <div class="grid grid-cols-2 gap-4">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
     <div>
-      <%= f.label :medium, class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.label :medium, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
       <%= f.text_field :medium,
-          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
-          placeholder: "Oil on canvas" %>
+          placeholder: "Oil on canvas",
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
     </div>
     <div>
-      <%= f.label :dimensions_cm, "Dimensions (cm)", class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.label :dimensions_cm, "Dimensions (cm)", style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
       <%= f.text_field :dimensions_cm,
-          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
-          placeholder: "60 × 80" %>
+          placeholder: "60 × 80",
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
     </div>
   </div>
 
   <%# ---- YEAR + PAINTED ON ---- %>
-  <div class="grid grid-cols-2 gap-4">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
     <div>
-      <%= f.label :year_created, class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.label :year_created, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
       <%= f.number_field :year_created,
-          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
-          placeholder: Date.today.year %>
+          placeholder: Date.today.year,
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
     </div>
     <div>
-      <%= f.label :painted_on, "Date Painted", class: "block text-sm font-medium text-stone-700 mb-1" %>
+      <%= f.label :painted_on, "Date Painted", style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
       <%= f.date_field :painted_on,
-          class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400" %>
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
     </div>
   </div>
 
   <%# ---- STATUS ---- %>
   <div>
-    <%= f.label :status, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.label :status, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
     <%= f.select :status,
         Artwork.statuses.keys.map { |s| [s.humanize, s] },
         {},
-        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 
-                focus:outline-none focus:ring-2 focus:ring-stone-400
-                bg-canvas2 text-cream" %>
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;" %>
   </div>
 
   <%# ---- DESCRIPTION ---- %>
   <div>
-    <%= f.label :description, class: "block text-sm font-medium text-stone-700 mb-1" %>
+    <%= f.label :description, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;" %>
     <%= f.text_area :description, rows: 4,
-        class: "w-full border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-stone-400",
-        placeholder: "Notes about this piece, inspiration, context..." %>
+        placeholder: "Notes about this piece, inspiration, context...",
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
   </div>
 
   <%# ---- IMAGES ---- %>
   <div>
-    <%= f.label :images, "Images", class: "block text-sm font-medium text-stone-700 mb-1" %>
-    <%= f.file_field :images, multiple: true, accept: "image/*",
-        class: "w-full text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-stone-900 file:text-white hover:file:bg-stone-700" %>
-    <p class="text-xs text-stone-400 mt-1">You can select multiple images. First image will be the cover.</p>
+    <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.75rem;">
+      Images
+    </label>
+    <div class="glass-card" style="padding:2rem;text-align:center;border-style:dashed;cursor:pointer;position:relative;" onclick="this.querySelector('input[type=file]').click()">
+      <div style="color:#5a4e3a;margin-bottom:0.75rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <p style="font-family:'DM Mono',monospace;font-size:0.75rem;color:#8a7a65;">Click to select images</p>
+      <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#3a3028;margin-top:0.3rem;">First image will be the cover · Multiple allowed</p>
+      <%= f.file_field :images, multiple: true, accept: "image/*",
+          style: "position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;",
+          onchange: "var n=this.files.length; this.closest('div').querySelector('.upload-feedback').textContent=n+' file'+(n!==1?'s':'')+' selected'" %>
+      <p class="upload-feedback" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#c4933f;margin-top:0.75rem;"></p>
+    </div>
   </div>
 
   <%# ---- PUBLIC TOGGLE ---- %>
-  <div class="flex items-center gap-3">
-    <%= f.check_box :is_public, class: "w-4 h-4 rounded border-stone-300" %>
-    <%= f.label :is_public, class: "text-sm text-stone-700" do %>
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <%= f.check_box :is_public, style: "width:16px;height:16px;accent-color:#c4933f;cursor:pointer;" %>
+    <%= f.label :is_public, style: "font-family:'DM Mono',monospace;font-size:0.75rem;color:#a89880;cursor:pointer;" do %>
       Show on public portfolio
-      <span class="text-stone-400">(galleries and buyers can see this)</span>
+      <span style="color:#5a4e3a;"> (galleries and buyers can see this)</span>
     <% end %>
   </div>
 
@@ -100,7 +111,7 @@
       placeholder="oil, portrait, landscape, impressionist..."
       style="width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;"
     />
-    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color: #645034;margin-top:0.4rem;">
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#5a4e3a;margin-top:0.4rem;">
       Separate tags with commas — e.g. oil, portrait, figurative, 2023
     </p>
 
@@ -108,7 +119,7 @@
     <% if artwork.tags.any? %>
       <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;">
         <% artwork.tags.each do |tag| %>
-          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:#2a251e;color: #c4933f;border-radius:3px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.25rem 0.6rem;background:rgba(196,147,63,0.08);color:#c4933f;border:1px solid rgba(196,147,63,0.15);border-radius:3px;">
             #<%= tag.name %>
           </span>
         <% end %>
@@ -117,11 +128,15 @@
   </div>
 
   <%# ---- SUBMIT ---- %>
-  <div class="pt-2">
+  <div class="divider"></div>
+  <div style="display:flex;align-items:center;gap:1rem;">
     <%= f.submit artwork.persisted? ? "Save Changes" : "Add to Studio",
-        class: "bg-stone-900 text-white px-6 py-3 rounded-lg hover:bg-stone-700 cursor-pointer font-medium" %>
+        class: "btn-primary",
+        style: "cursor:pointer;" %>
     <%= link_to "Cancel", artwork.persisted? ? artwork_path(artwork.slug) : artworks_path,
-        class: "ml-4 text-sm text-stone-400 hover:text-stone-700" %>
+        style: "font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:#5a4e3a;text-decoration:none;transition:color 0.2s;",
+        onmouseover: "this.style.color='#c4933f'",
+        onmouseout: "this.style.color='#5a4e3a'" %>
   </div>
 
 <% end %>
