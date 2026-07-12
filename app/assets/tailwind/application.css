@@ -228,7 +228,7 @@ h1, h2, h3 {
 /* ══════════════════════════════════════════
    FORM INPUTS — GLOBAL DARK THEME
    ══════════════════════════════════════════ */
-input[type="text"],
+input[type="text"]:not(.tag-search-input),
 input[type="email"],
 input[type="password"],
 input[type="number"],
@@ -246,7 +246,7 @@ option {
   font-family: "DM Mono", monospace;
 }
 
-input:focus,
+input:focus:not(.tag-search-input),
 textarea:focus,
 select:focus {
   border-color: #c4933f !important;

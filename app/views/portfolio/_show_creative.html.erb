@@ -1,29 +1,61 @@
 <div class="show-creative">
-  <div class="creative-bg" style="position: fixed; inset: 0; z-index: -1;">
+  <%# ── BLURRED BG ── %>
+  <div class="sx-bg">
     <% if @artwork.images.attached? %>
-      <%= image_tag @artwork.images.first, style: "width: 100%; height: 100%; object-fit: cover; opacity: 0.1; filter: blur(30px);" %>
+      <%= image_tag @artwork.images.first, class: "sx-bg-img" %>
     <% end %>
+    <div class="sx-bg-overlay"></div>
   </div>
-  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 3rem;">
-    <div style="display: flex; gap: 5rem; align-items: center; max-width: 1200px; width: 100%; flex-wrap: wrap;">
-      <div style="flex: 1; min-width: 300px;">
-        <% if @artwork.images.attached? %>
-          <%= image_tag @artwork.images.first, style: "width: 100%; border-radius: 8px; box-shadow: 0 40px 80px rgba(0,0,0,0.6);" %>
-        <% end %>
-      </div>
-      <div style="flex: 1; min-width: 300px;">
-        <p style="color: #ff4d4d; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.7rem; margin-bottom: 1rem;">
-          <%= [@artwork.medium, @artwork.year_created].compact.join(' &mdash; ').html_safe %>
-        </p>
-        <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 2rem; color: #fff;">
-          <%= @artwork.title %>
-        </h1>
-        <% if @artwork.description.present? %>
-          <p style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 2rem;"><%= @artwork.description %></p>
-        <% end %>
-        <div style="display: inline-block; padding: 0.5rem 1rem; border: 1px solid <%= @artwork.available? ? '#ff4d4d' : 'rgba(255,255,255,0.2)' %>; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: <%= @artwork.available? ? '#ff4d4d' : 'rgba(255,255,255,0.4)' %>; text-transform: uppercase; letter-spacing: 0.1em;">
-          <%= @artwork.status.humanize %>
+
+  <%# ── CINEMATIC LAYOUT ── %>
+  <div class="sx-stage">
+    <%# Image side %>
+    <div class="sx-image-col">
+      <% if @artwork.images.attached? %>
+        <div class="sx-image-frame">
+          <%= image_tag @artwork.images.first, id: "main-img-creative", class: "sx-main-img" %>
         </div>
+        <% if @artwork.images.count > 1 %>
+          <div class="sx-thumb-strip">
+            <% @artwork.images.each_with_index do |image, i| %>
+              <div class="sx-thumb <%= i == 0 ? 'active' : '' %>"
+                   onclick="document.getElementById('main-img-creative').src='<%= url_for(image) %>'; document.querySelectorAll('.sx-thumb').forEach(t => t.classList.remove('active')); this.classList.add('active')">
+                <%= image_tag image, style: "width:100%;height:100%;object-fit:cover;" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Info side %>
+    <div class="sx-info-col">
+      <div class="sx-info-inner">
+        <p class="sx-meta-line">
+          <%= [@artwork.medium, @artwork.year_created].compact.join(' — ') %>
+        </p>
+        <h1 class="sx-title"><%= @artwork.title %></h1>
+        <div class="sx-red-line"></div>
+
+        <p class="sx-description"><%= @artwork.description.presence || 'No description added yet.' %></p>
+
+        <%# Data chips %>
+        <div class="sx-chips">
+          <div class="sx-chip"><%= @artwork.dimensions_cm.present? ? "#{@artwork.dimensions_cm} cm" : '—' %></div>
+          <div class="sx-chip sx-chip-status" style="<%= @artwork.available? ? 'border-color:#ff4d4d;color:#ff4d4d;' : '' %>">
+            <% if @artwork.available? %><span class="sx-chip-dot"></span><% end %>
+            <%= @artwork.status.humanize %>
+          </div>
+        </div>
+
+        <%# Progress bar decoration %>
+        <div class="sx-progress-deco">
+          <div class="sx-progress-fill"></div>
+        </div>
+
+        <a href="<%= portfolio_path %>" class="sx-back-btn">
+          ← Back to Gallery
+        </a>
       </div>
     </div>
   </div>

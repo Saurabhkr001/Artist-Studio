@@ -1,34 +1,71 @@
 <div class="show-raw">
-  <div style="padding: 6rem 3rem; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-    <div style="position: relative;">
-      <% if @artwork.images.attached? %>
-        <%= image_tag @artwork.images.first, style: "width: 100%; filter: grayscale(1) brightness(0.8);" %>
-      <% end %>
-    </div>
-    <div>
-      <p style="font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem;">
-        <%= [@artwork.year_created, @artwork.medium].compact.join(' · ') %>
-      </p>
-      <h1 style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(4rem, 8vw, 6rem); text-transform: uppercase; font-weight: 900; line-height: 0.9; margin-bottom: 3rem; color: #fff;">
-        <%= @artwork.title %>
-      </h1>
-      
-      <div style="display: grid; gap: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
-        <% if @artwork.dimensions_cm.present? %>
-          <div style="display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; color: #fff;">
-            <span style="color: rgba(255,255,255,0.4);">DIMENSIONS</span>
-            <span><%= @artwork.dimensions_cm %> cm</span>
-          </div>
-        <% end %>
-        <div style="display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; color: #fff;">
-          <span style="color: rgba(255,255,255,0.4);">STATUS</span>
-          <span><%= @artwork.status.upcase %></span>
-        </div>
+  <%# ── FULL-BLEED HERO ── %>
+  <div class="sr-hero">
+    <% if @artwork.images.attached? %>
+      <div class="sr-hero-bg">
+        <%= image_tag @artwork.images.first, id: "main-img-raw", class: "sr-hero-bg-img" %>
       </div>
-      
-      <% if @artwork.description.present? %>
-        <p style="margin-top: 3rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 2;"><%= @artwork.description %></p>
-      <% end %>
+    <% end %>
+    <div class="sr-hero-grid"></div>
+    <div class="sr-hero-content">
+      <div class="sr-hero-eyebrow">
+        <span class="sr-hero-line"></span>
+        <span><%= [@artwork.year_created, @artwork.medium].compact.join(' · ') %></span>
+      </div>
+      <h1 class="sr-hero-title"><%= @artwork.title %></h1>
+    </div>
+    <div class="sr-hero-num">01</div>
+  </div>
+
+  <%# ── SPECS STRIP ── %>
+  <div class="sr-specs-strip">
+    <div class="sr-spec">
+      <span class="sr-spec-label">MEDIUM</span>
+      <span class="sr-spec-value"><%= @artwork.medium || '—' %></span>
+    </div>
+    <div class="sr-spec">
+      <span class="sr-spec-label">YEAR</span>
+      <span class="sr-spec-value"><%= @artwork.year_created.presence || '—' %></span>
+    </div>
+    <div class="sr-spec">
+      <span class="sr-spec-label">DIMENSIONS</span>
+      <span class="sr-spec-value"><%= @artwork.dimensions_cm.present? ? "#{@artwork.dimensions_cm} CM" : '—' %></span>
+    </div>
+    <div class="sr-spec">
+      <span class="sr-spec-label">STATUS</span>
+      <span class="sr-spec-value"><%= @artwork.status.upcase %></span>
+    </div>
+  </div>
+
+  <%# ── IMAGE + DESCRIPTION ── %>
+  <div class="sr-detail-section">
+    <div class="sr-detail-grid">
+      <div class="sr-detail-img-wrap">
+        <% if @artwork.images.attached? %>
+          <%= image_tag @artwork.images.first, class: "sr-detail-img" %>
+          <% if @artwork.images.count > 1 %>
+            <div class="sr-thumb-row">
+              <% @artwork.images.each_with_index do |image, i| %>
+                <div class="sr-thumb <%= i == 0 ? 'active' : '' %>"
+                     onclick="document.getElementById('main-img-raw').src='<%= url_for(image) %>'; document.querySelector('.sr-detail-img').src='<%= url_for(image) %>'; document.querySelectorAll('.sr-thumb').forEach(t => t.classList.remove('active')); this.classList.add('active')">
+                  <%= image_tag image, style: "width:100%;height:100%;object-fit:cover;" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="sr-detail-text">
+        <div class="sr-section-label">
+          <span class="sr-section-num">02</span>
+          <span>DETAILS</span>
+        </div>
+        <p class="sr-description"><%= @artwork.description.presence || 'No description added yet.' %></p>
+        <a href="<%= portfolio_path %>" class="sr-back-btn">
+          <span>← BACK TO WORKS</span>
+          <span class="sr-btn-arrow">→</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
