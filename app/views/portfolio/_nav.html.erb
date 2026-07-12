@@ -5,13 +5,41 @@
     <% if @user.artist_statement.present? %>
       <a href="#about">About</a>
     <% end %>
+
+    <% if @all_tags&.any? %>
+      <div class="tag-search-wrap" id="tagSearchWrap">
+        <div class="tag-search-input-wrap">
+          <span class="tag-search-hash">#</span>
+          <input
+            type="text"
+            id="tagSearchInput"
+            class="tag-search-input"
+            placeholder="search tags…"
+            autocomplete="off"
+            value="<%= params[:tag] %>"
+          >
+          <% if params[:tag].present? %>
+            <a href="<%= portfolio_path(status: params[:status]) %>" class="tag-search-clear" title="Clear tag filter">×</a>
+          <% end %>
+        </div>
+        <div class="tag-search-dropdown" id="tagSearchDropdown">
+          <% @all_tags.each do |tag| %>
+            <a href="<%= portfolio_path(tag: tag.name, status: params[:status]) %>" class="tag-search-option" data-tag="<%= tag.name %>">
+              <span class="tag-search-option-hash">#</span><%= tag.name %>
+            </a>
+          <% end %>
+          <div class="tag-search-empty" id="tagSearchEmpty" style="display:none;">No matching tags</div>
+        </div>
+      </div>
+    <% end %>
+
     <% if @user.contact_email.present? %>
       <a href="mailto:<%= @user.contact_email %>" class="nav-contact">Enquire</a>
     <% end %>
     <div class="mode-slider" id="mode-slider">
       <button class="mode-btn" data-mode="classic" onclick="setMode('classic')">Classic</button>
-      <button class="mode-btn" data-mode="raw" onclick="setMode('raw')">Raw</button>
-      <button class="mode-btn" data-mode="creative" onclick="setMode('creative')">Creative</button>
+      <button class="mode-btn" data-mode="raw" onclick="setMode('raw')">Studio</button>
+      <button class="mode-btn" data-mode="creative" onclick="setMode('creative')">Reel</button>
       <div class="slider-pill" id="slider-pill"></div>
     </div>
   </div>

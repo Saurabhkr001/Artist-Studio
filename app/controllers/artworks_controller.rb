@@ -29,7 +29,7 @@ class ArtworksController < ApplicationController
     @artwork = current_user.artworks.new(artwork_params)
     if @artwork.save
       save_tags(@artwork)
-      redirect_to @artwork, notice: "Artwork added to your studio."
+      redirect_to root_path, notice: "Artwork added to your studio."
     else
       render :new, status: :unprocessable_entity
     end
@@ -41,7 +41,7 @@ class ArtworksController < ApplicationController
   def update
     if @artwork.update(artwork_params)
       save_tags(@artwork)
-      redirect_to @artwork, notice: "Artwork updated."
+      redirect_to root_path, notice: "Artwork updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -49,7 +49,7 @@ class ArtworksController < ApplicationController
 
   def destroy
     @artwork.destroy
-    redirect_to artworks_path, notice: "Artwork removed from your studio."
+    redirect_to root_path, notice: "Artwork removed from your studio."
   end
 
   def catalogue

@@ -20,6 +20,6 @@ class ProfileController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:name, :artist_statement, :contact_email, :avatar, :cover_image)
+    params.require(:user).permit(:name, :artist_statement, :contact_email, :achievements, :avatar, :cover_image)
   end
 end

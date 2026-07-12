@@ -19,7 +19,7 @@ class HomeController < ApplicationController
     @total       = artworks.count
     @public      = artworks.where(is_public: true).count
     @status_data = Artwork.statuses.keys.map { |s| [ s, artworks.public_send(s).count ] }.to_h
-    @by_year     = artworks.where.not(year_created: nil)
+    @by_year     = artworks.where("year_created > 0")
                           .group(:year_created).count.sort.to_h
     @by_medium   = artworks.where.not(medium: nil)
                           .group(:medium).count

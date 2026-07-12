@@ -9,4 +9,8 @@ class User < ApplicationRecord
   def display_name
     name.presence || email.split("@").first.titleize
   end
+
+  def achievements_list
+    achievements.to_s.split("\n").map(&:strip).reject(&:blank?)
+  end
 end

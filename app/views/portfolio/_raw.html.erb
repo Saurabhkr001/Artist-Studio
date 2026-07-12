@@ -55,20 +55,26 @@
     </div>
   </div>
 
-  <%# MARQUEE %>
+  <%# MARQUEE — My Achievements %>
+  <% achievements = @user.achievements_list %>
   <div class="raw-marquee-wrap">
     <div class="raw-marquee" id="raw-marquee">
       <% 4.times do %>
-        <span class="raw-marquee-item">Fine Art</span>
-        <span class="raw-marquee-item">Painting</span>
-        <span class="raw-marquee-item">Studio Archive</span>
-        <span class="raw-marquee-item"><%= @user.display_name.upcase %></span>
-        <span class="raw-marquee-item"><%= Date.today.year %></span>
-        <span class="raw-marquee-item">Original Works</span>
+        <% if achievements.any? %>
+          <% achievements.each do |achievement| %>
+            <span class="raw-marquee-item"><%= achievement.upcase %></span>
+          <% end %>
+        <% else %>
+          <span class="raw-marquee-item">Fine Art</span>
+          <span class="raw-marquee-item">Painting</span>
+          <span class="raw-marquee-item">Studio Archive</span>
+          <span class="raw-marquee-item"><%= @user.display_name.upcase %></span>
+          <span class="raw-marquee-item"><%= Date.today.year %></span>
+          <span class="raw-marquee-item">Original Works</span>
+        <% end %>
       <% end %>
     </div>
   </div>
-
   <%# BENTO GRID %>
   <div class="raw-grid-section" id="works">
     <div class="raw-section-header">
