@@ -4,7 +4,7 @@
     <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-style:italic;font-weight:300;color:#f0e6d3;">
       Your Profile
     </h1>
-    <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#3a3028;margin-top:0.3rem;letter-spacing:0.1em;">
+    <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#5f4d3fff;margin-top:0.3rem;letter-spacing:0.1em;">
       Shown on your public portfolio page
     </p>
   </div>
@@ -15,7 +15,7 @@
 
         <%# ── AVATAR ── %>
         <div>
-          <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.75rem;">
+          <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.75rem;">
             Profile Picture
           </label>
           <div style="display:flex;align-items:center;gap:1.5rem;">
@@ -26,7 +26,7 @@
               </div>
             <% else %>
               <div style="width:80px;height:80px;border-radius:50%;background:#1a1612;border:2px dashed #2a251e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3a3028" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5f4d3fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
               </div>
             <% end %>
             <div style="flex:1;">
@@ -52,7 +52,7 @@
 
       <%# ── COVER IMAGE ── %>
       <div>
-        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.75rem;">
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.75rem;">
           Cover Image
         </label>
         <% if current_user.cover_image.attached? %>
@@ -77,9 +77,9 @@
         <span>Remove</span>
       </label>
     <% end %>
-    <span id="cover-file-name" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:#5a4e3a;margin-left:0.5rem;"></span>
-        <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
-          Used as the hero background on your portfolio. Wide landscape image works best.
+    <span id="cover-file-name" style="font-family:'DM Mono',monospace;font-size:0.65rem;color: #5a4e3a;margin-left:0.5rem;"></span>
+        <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color: #80571eff;margin-top:0.4rem;">
+          Use it as the background on your portfolio. Wide landscape image works best.
         </p>
       </div>
 
@@ -87,20 +87,20 @@
       
       <%# ── MY ACHIEVEMENTS ── %>
       <div>
-        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;">
           My Achievements
         </label>
         <%= f.text_area :achievements, rows: 5,
             placeholder: "One achievement per line, e.g.\nFeatured Artist, City Gallery 2025\nSolo Exhibition — \"Memory & Form\"\nArtist Residency, Blue Ridge Studios",
-            style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
-        <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#2a251e;margin-top:0.4rem;">
+            style: "width:100%;background:#1a1612;border:1px solid #52493cff;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
+        <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color: #52483aff;margin-top:0.4rem;">
           One achievement, award, exhibition, or milestone per line. These scroll in the marquee strip on your "Raw" mode portfolio.
         </p>
       </div>
 
       <%# ── NAME ── %>
       <div>
-        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;">
           Your Name
         </label>
         <%= f.text_field :name,
@@ -110,7 +110,7 @@
 
       <%# ── CONTACT EMAIL ── %>
       <div>
-        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;">
           Contact Email (public)
         </label>
         <%= f.email_field :contact_email,
@@ -120,7 +120,7 @@
 
       <%# ── ARTIST STATEMENT ── %>
       <div>
-        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#3a3028;margin-bottom:0.5rem;">
+        <label style="display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color: #5e4c3eff;margin-bottom:0.5rem;">
           Artist Statement
         </label>
         <%= f.text_area :artist_statement, rows: 4,
