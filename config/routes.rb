@@ -17,6 +17,10 @@ Rails.application.routes.draw do
 
   get "/portfolio", to: "portfolio#index", as: :portfolio
   get "/portfolio/:slug", to: "portfolio#show", as: :portfolio_artwork
+
+  # Public shareable portfolio via unique user_hash
+  get "/:user_hash/portfolio",       to: "portfolio#public_index", as: :public_portfolio
+  get "/:user_hash/portfolio/:slug", to: "portfolio#public_show",  as: :public_portfolio_artwork
   get "/credits", to: "home#credits"
   get "/profile/edit", to: "profile#edit", as: :edit_profile
   patch "/profile",     to: "profile#update", as: :profile

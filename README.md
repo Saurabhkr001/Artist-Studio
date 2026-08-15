@@ -53,7 +53,6 @@ Inspired by modern art galleries and museum experiences:
 | Stimulus        | Frontend interactions                |
 | Tailwind CSS v4 | Styling                              |
 | SQLite          | Development Database                 |
-| Kamal           | Deployment                           |
 
 ---
 

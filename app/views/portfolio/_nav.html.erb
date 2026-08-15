@@ -33,6 +33,13 @@
       </div>
     <% end %>
 
+    <a
+      href="#"
+      onclick="sharePortfolio(event)"
+      class="nav-contact"
+      id="share-btn"
+      data-share-url="<%= public_portfolio_url(@user.user_hash) %>"
+    >Share</a>
     <% if @user.contact_email.present? %>
       <a href="mailto:<%= @user.contact_email %>" class="nav-contact">Enquire</a>
     <% end %>
@@ -44,3 +51,24 @@
     </div>
   </div>
 </nav>
+
+<script>
+  function sharePortfolio(e) {
+    e.preventDefault();
+    const btn = document.getElementById('share-btn');
+    const url = btn.dataset.shareUrl;
+    const title = document.title;
+
+    if (navigator.share) {
+      navigator.share({ title: title, url: url }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        const original = btn.innerText;
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = original; }, 2000);
+      }).catch(() => {
+        alert("Share this link:\n" + url);
+      });
+    }
+  }
+</script>
