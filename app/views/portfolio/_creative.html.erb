@@ -10,7 +10,7 @@
     <div class="creative-slider" id="creative-slider">
       <% if @artworks.any? %>
         <% @artworks.each do |artwork| %>
-          <%= link_to portfolio_artwork_path(artwork.slug), class: "creative-slide" do %>
+          <%= link_to (params[:user_hash].present? ? public_portfolio_artwork_path(params[:user_hash], artwork.slug) : portfolio_artwork_path(artwork.slug)), class: "creative-slide" do %>
             <div class="creative-img-wrap">
               <% if artwork.images.attached? %>
                 <%= image_tag artwork.images.first, class: "creative-img", alt: artwork.title %>

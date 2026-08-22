@@ -97,6 +97,13 @@
                 class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'artworks' && action_name == 'index' ? 'nav-link-active' : ''}" %>
             <%= link_to "Analytics", analytics_path,
                 class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'home' && action_name == 'analytics' ? 'nav-link-active' : ''}" %>
+                        <% unread_count = current_user.enquiries.where(read: false).count %>
+            <%= link_to enquiries_path, class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'enquiries' ? 'nav-link-active' : ''}" do %>
+              Enquiries
+              <% if unread_count > 0 %>
+                <span style="background: #a83232; color: #fff; padding: 0.1rem 0.35rem; border-radius: 999px; margin-left: 0.2rem; font-size: 0.55rem; font-weight: bold;"><%= unread_count %></span>
+              <% end %>
+            <% end %>
             <%= link_to "Portfolio ↗", portfolio_path,
                 class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap",
                 target: "_blank" %>

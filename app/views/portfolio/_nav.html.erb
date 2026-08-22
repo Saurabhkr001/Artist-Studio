@@ -41,7 +41,7 @@
       data-share-url="<%= public_portfolio_url(@user.user_hash) %>"
     >Share</a>
     <% if @user.contact_email.present? %>
-      <a href="mailto:<%= @user.contact_email %>" class="nav-contact">Enquire</a>
+      <a href="<%= public_enquiry_path(@user.user_hash) %>" class="nav-contact">Enquire</a>
     <% end %>
     <div class="mode-slider" id="mode-slider">
       <button class="mode-btn" data-mode="classic" onclick="setMode('classic')">Classic</button>

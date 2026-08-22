@@ -84,7 +84,7 @@
     <% if @artworks.any? %>
       <div class="raw-bento" id="raw-bento">
         <% @artworks.each_with_index do |artwork, i| %>
-          <%= link_to portfolio_artwork_path(artwork.slug), class: "raw-bento-item", id: "bento-#{i}" do %>
+          <%= link_to (params[:user_hash].present? ? public_portfolio_artwork_path(params[:user_hash], artwork.slug) : portfolio_artwork_path(artwork.slug)), class: "raw-bento-item", id: "bento-#{i}" do %>
             <% if artwork.images.attached? %>
               <%= image_tag artwork.images.first, class: "artwork-frame", alt: artwork.title %>
             <% else %>
@@ -130,7 +130,7 @@
         <p class="raw-about-label">Studio · Enquiries</p>
         <p style="font-family:'DM Mono',monospace;font-size:0.8rem;color:rgba(255,255,255,0.35);line-height:2;margin-bottom:2rem;">For sales enquiries, exhibition proposals, commissions, and press opportunities.</p>
         <% if @user.contact_email.present? %>
-          <a href="mailto:<%= @user.contact_email %>" class="raw-contact-btn">
+          <a href="<%= public_enquiry_path(@user.user_hash) %>" class="raw-contact-btn">
             <%= @user.contact_email %>
             <span class="btn-arrow">→</span>
           </a>
