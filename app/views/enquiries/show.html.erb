@@ -1,0 +1,50 @@
+<div class="container mx-auto px-4 py-12 max-w-3xl">
+  <%= link_to enquiries_path, class: "group flex items-center gap-3 text-[#a49a8c] font-mono text-xs uppercase tracking-widest hover:text-[#f5f1e8] transition-colors mb-10" do %>
+    <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Inbox
+  <% end %>
+  
+  <div class="bg-[#110f0c] border border-[#2a2622] rounded-xl overflow-hidden shadow-2xl relative">
+    <!-- Decorative accent line -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#c4933f] to-transparent opacity-50"></div>
+    
+    <div class="p-10">
+      <div class="flex justify-between items-start mb-10 pb-8 border-b border-[#2a2622]">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#c4933f] mb-3">Message from</p>
+          <h1 class="text-3xl text-[#f5f1e8] font-serif italic mb-1"><%= @enquiry.sender_name %></h1>
+          <a href="mailto:<%= @enquiry.sender_email %>" class="text-sm text-[#8c8273] font-mono hover:text-[#c4933f] transition-colors"><%= @enquiry.sender_email %></a>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-[#a49a8c] font-mono uppercase tracking-widest mb-1"><%= @enquiry.created_at.strftime("%b %d, %Y") %></p>
+          <p class="text-xs text-[#666] font-mono"><%= @enquiry.created_at.strftime("%I:%M %p") %></p>
+        </div>
+      </div>
+
+      <% if @enquiry.artwork %>
+        <div class="mb-10 p-5 bg-[#161310] border border-[#2a2622] rounded-lg flex items-center gap-5 transition-colors hover:border-[#4a4232]">
+          <% if @enquiry.artwork.images.attached? %>
+            <%= image_tag @enquiry.artwork.images.first, class: "w-20 h-20 object-cover rounded shadow-md" %>
+          <% end %>
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-[0.2em] text-[#8c8273] mb-1">Enquiring about</p>
+            <p class="text-[#f5f1e8] font-medium text-lg mb-2"><%= @enquiry.artwork.title %></p>
+            <%= link_to "View Artwork →", artwork_path(@enquiry.artwork.slug), class: "text-[#c4933f] text-xs font-mono tracking-wider hover:text-[#e4b35f] transition-colors" %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="prose prose-invert max-w-none text-[#d6cdbe] leading-[1.8] whitespace-pre-wrap font-serif text-[1.1rem] tracking-wide">
+        <%= @enquiry.message %>
+      </div>
+    </div>
+    
+    <div class="px-10 py-6 bg-[#161310] border-t border-[#2a2622] flex justify-between items-center">
+      <a href="mailto:<%= @enquiry.sender_email %>" class="inline-flex items-center gap-2 px-6 py-3 bg-[#f5f1e8] text-black text-xs font-bold uppercase tracking-widest rounded hover:bg-[#c4933f] hover:text-white transition-all duration-300">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+        Reply via Email
+      </a>
+      <%= link_to "Delete", enquiry_path(@enquiry), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this message?" }, class: "text-red-500/70 text-xs font-mono uppercase tracking-widest hover:text-red-500 transition-colors" %>
+    </div>
+  </div>
+</div>

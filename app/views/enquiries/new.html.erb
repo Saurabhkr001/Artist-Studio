@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Enquire - <%= @user.display_name %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <style>
+    :root {
+      --bg-color: #050505;
+      --glass-bg: rgba(20, 20, 20, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f0e6d3;
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --accent: #c4933f;
+    }
+    
+    body { 
+      background-color: var(--bg-color); 
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(196,147,63,0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255,255,255,0.03) 0px, transparent 50%);
+      color: var(--text-main); 
+      font-family: "Space Grotesk", sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      padding: 2rem;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+
+    /* Ambient animated orb */
+    .orb {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,147,63,0.05) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      animation: pulse 10s ease-in-out infinite alternate;
+    }
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
+
+    .form-container { 
+      background: var(--glass-bg); 
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 3.5rem 3rem; 
+      border: 1px solid var(--glass-border); 
+      border-radius: 12px; 
+      width: 100%; 
+      max-width: 540px; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideUp {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .close-btn { 
+      display: inline-flex; 
+      align-items: center;
+      gap: 0.5rem;
+      font-family: "DM Mono", monospace; 
+      font-size: 0.65rem; 
+      color: var(--text-muted); 
+      text-transform: uppercase; 
+      letter-spacing: 0.15em; 
+      margin-bottom: 2.5rem; 
+      text-decoration: none; 
+      transition: all 0.3s ease;
+    }
+    .close-btn:hover { color: var(--text-main); transform: translateX(-4px); }
+
+    .title {
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 3.2rem; 
+      font-style: italic; 
+      font-weight: 300; 
+      margin-bottom: 2.5rem;
+      line-height: 1;
+      background: linear-gradient(to right, #fff, #c4933f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .input-group { 
+      position: relative;
+      margin-bottom: 2rem; 
+    }
+
+    .input-group input, .input-group textarea {
+      width: 100%;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 1rem 1.2rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .input-group input:focus, .input-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 1.2rem;
+      top: 1.1rem;
+      font-family: "DM Mono", monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Floating label magic */
+    .input-group input:focus ~ label,
+    .input-group input:not(:placeholder-shown) ~ label,
+    .input-group textarea:focus ~ label,
+    .input-group textarea:not(:placeholder-shown) ~ label {
+      transform: translateY(-2.1rem) scale(0.85);
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* Hide native placeholder but keep it for logic */
+    .input-group input::placeholder, .input-group textarea::placeholder {
+      color: transparent;
+    }
+
+    .submit-btn { 
+      position: relative;
+      background: #fff; 
+      color: #000; 
+      padding: 1.1rem 2rem; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      text-transform: uppercase; 
+      font-size: 0.75rem; 
+      letter-spacing: 0.15em; 
+      font-weight: 600; 
+      width: 100%; 
+      margin-top: 1rem; 
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      z-index: 1;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--accent);
+      z-index: -1;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .submit-btn:hover {
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -10px rgba(196,147,63,0.5);
+    }
+    .submit-btn:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .artwork-context {
+      padding: 1.25rem; 
+      background: rgba(196,147,63,0.05); 
+      border: 1px solid rgba(196,147,63,0.15); 
+      border-radius: 8px; 
+      display: flex; 
+      align-items: center; 
+      gap: 1.25rem; 
+      margin-bottom: 2.5rem;
+    }
+    .artwork-context img {
+      width: 60px; height: 60px; 
+      object-fit: cover; 
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="orb"></div>
+  <div class="form-container">
+    <%= link_to public_portfolio_path(@user.user_hash), class: "close-btn" do %>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to Portfolio
+    <% end %>
+    
+    <h1 class="title">Studio Enquiry</h1>
+    
+    <% if @enquiry.errors.any? %>
+      <div style="background: rgba(255,60,60,0.1); border: 1px solid rgba(255,60,60,0.3); color: #ff6b6b; padding: 1rem; margin-bottom: 2rem; border-radius: 6px; font-size: 0.85rem;">
+        <% @enquiry.errors.full_messages.each do |msg| %>
+          <div><%= msg %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= form_with model: @enquiry, url: public_enquiry_path(@user.user_hash), local: true do |f| %>
+      <% if @artwork %>
+        <div class="artwork-context">
+          <% if @artwork.images.attached? %>
+            <%= image_tag @artwork.images.first %>
+          <% end %>
+          <div>
+            <p style="font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--accent); margin: 0 0 0.3rem; text-transform: uppercase; letter-spacing: 0.15em;">Enquiring about</p>
+            <p style="margin: 0; font-weight: 400; font-size: 1.1rem; letter-spacing: 0.02em;"><%= @artwork.title %></p>
+          </div>
+        </div>
+        <%= f.hidden_field :artwork_id, value: @artwork.id %>
+      <% end %>
+
+      <div class="input-group">
+        <%= f.text_field :sender_name, required: true, placeholder: " " %>
+        <%= f.label :sender_name, "Your Name" %>
+      </div>
+      <div class="input-group">
+        <%= f.email_field :sender_email, required: true, placeholder: " " %>
+        <%= f.label :sender_email, "Email Address" %>
+      </div>
+      <div class="input-group">
+        <%= f.text_area :message, rows: 4, required: true, placeholder: " " %>
+        <%= f.label :message, "Message" %>
+      </div>
+      <%= f.submit "Send Enquiry", class: "submit-btn" %>
+    <% end %>
+  </div>
+</body>
+</html>

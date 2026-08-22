@@ -75,3 +75,6 @@ gem "dotenv-rails", "~> 3.2"
 gem "prawn"
 gem "prawn-table"
 gem "prawn-svg"
+
+# Security: Prevent brute force and DoS
+gem "rack-attack"

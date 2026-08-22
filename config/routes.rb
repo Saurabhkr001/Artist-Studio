@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get "profile/edit"
   devise_for :users
+  resources :enquiries, only: [:index, :show, :destroy]
 
   root to: "home#index"
 
@@ -19,6 +20,8 @@ Rails.application.routes.draw do
   get "/portfolio/:slug", to: "portfolio#show", as: :portfolio_artwork
 
   # Public shareable portfolio via unique user_hash
+  get "/:user_hash/enquire", to: "enquiries#new", as: :public_enquiry
+  post "/:user_hash/enquire", to: "enquiries#create"
   get "/:user_hash/portfolio",       to: "portfolio#public_index", as: :public_portfolio
   get "/:user_hash/portfolio/:slug", to: "portfolio#public_show",  as: :public_portfolio_artwork
   get "/credits", to: "home#credits"

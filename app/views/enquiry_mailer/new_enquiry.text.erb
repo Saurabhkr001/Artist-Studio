@@ -1,0 +1,14 @@
+New Studio Enquiry
+===================
+
+From: <%= @enquiry.sender_name %> (<%= @enquiry.sender_email %>)
+<% if @enquiry.artwork %>
+Artwork: <%= @enquiry.artwork.title %>
+<% end %>
+Date: <%= @enquiry.created_at.strftime("%B %d, %Y") %>
+
+Message:
+<%= @enquiry.message %>
+
+--
+View your enquiries at: <%= enquiries_url %>

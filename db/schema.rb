@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_16_010100) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_23_040048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_010100) do
     t.index ["user_id"], name: "index_artworks_on_user_id"
   end
 
+  create_table "enquiries", force: :cascade do |t|
+    t.bigint "artwork_id"
+    t.datetime "created_at", null: false
+    t.text "message"
+    t.boolean "read", default: false, null: false
+    t.string "sender_email"
+    t.string "sender_name"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["artwork_id"], name: "index_enquiries_on_artwork_id"
+    t.index ["user_id"], name: "index_enquiries_on_user_id"
+  end
+
   create_table "studio_notes", force: :cascade do |t|
     t.bigint "artwork_id", null: false
     t.text "body"
@@ -120,5 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_16_010100) do
   add_foreign_key "artwork_tags", "artworks"
   add_foreign_key "artwork_tags", "tags"
   add_foreign_key "artworks", "users"
+  add_foreign_key "enquiries", "artworks"
+  add_foreign_key "enquiries", "users"
   add_foreign_key "studio_notes", "artworks"
 end

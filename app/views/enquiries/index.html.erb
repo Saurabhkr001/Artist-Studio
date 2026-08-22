@@ -1,0 +1,75 @@
+<div class="container mx-auto px-4 py-12 max-w-5xl">
+  <div class="flex justify-between items-end mb-10 pb-6 border-b border-[#2a2622]">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-widest text-[#c4933f] mb-3">Dashboard</p>
+      <h1 class="text-4xl font-serif italic font-light text-[#f5f1e8]">Enquiries</h1>
+    </div>
+    <div class="text-sm font-mono text-[#a49a8c]">
+      <%= @pagy.count %> Total Messages
+    </div>
+  </div>
+  
+  <div class="bg-[#110f0c] border border-[#2a2622] rounded-xl overflow-hidden shadow-2xl">
+    <% if @enquiries.any? %>
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-[#161310] text-[#8c8273] font-mono text-[10px] uppercase tracking-widest border-b border-[#2a2622]">
+          <tr>
+            <th class="px-8 py-5 font-normal">Date</th>
+            <th class="px-8 py-5 font-normal">Sender</th>
+            <th class="px-8 py-5 font-normal">Artwork</th>
+            <th class="px-8 py-5 font-normal text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm">
+          <% @enquiries.each do |enquiry| %>
+            <tr class="border-b border-[#2a2622] hover:bg-[#1a1612] transition-colors duration-300 group cursor-pointer" onclick="window.location='<%= enquiry_path(enquiry) %>'">
+              <td class="px-8 py-5">
+                <span class="<%= enquiry.read? ? 'text-[#8c8273]' : 'text-[#f5f1e8] font-bold' %> tracking-wide">
+                  <%= enquiry.created_at.strftime("%b %d, %Y") %>
+                </span>
+              </td>
+              <td class="px-8 py-5">
+                <div class="flex items-center gap-3">
+                  <% unless enquiry.read? %>
+                    <div class="w-2 h-2 rounded-full bg-[#c4933f] shadow-[0_0_8px_rgba(196,147,63,0.8)] animate-pulse"></div>
+                  <% end %>
+                  <div>
+                    <div class="text-[15px] tracking-wide <%= enquiry.read? ? 'text-[#e0d6c8]' : 'text-white font-semibold' %>">
+                      <%= enquiry.sender_name %>
+                    </div>
+                    <div class="text-xs text-[#8c8273] mt-0.5 font-mono"><%= enquiry.sender_email %></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-8 py-5 text-[#a49a8c]">
+                <% if enquiry.artwork %>
+                  <span class="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#1a1612] border border-[#2a2622] text-xs">
+                    <%= enquiry.artwork.title %>
+                  </span>
+                <% else %>
+                  <span class="text-[#555]">—</span>
+                <% end %>
+              </td>
+              <td class="px-8 py-5 text-right">
+                <div class="text-[#c4933f] text-xs uppercase tracking-widest font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-x-2 group-hover:translate-x-0 inline-block">
+                  Read →
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="p-6 border-t border-[#2a2622] text-center bg-[#161310]">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center py-24 text-center">
+        <div class="w-16 h-16 rounded-full border border-[#2a2622] flex items-center justify-center mb-6 text-[#444]">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <p class="text-[#a49a8c] font-serif italic text-xl">No enquiries yet.</p>
+        <p class="text-[#666] font-mono text-xs uppercase tracking-widest mt-3">Your inbox is empty</p>
+      </div>
+    <% end %>
+  </div>
+</div>

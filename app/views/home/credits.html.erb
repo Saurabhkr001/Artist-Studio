@@ -1,4 +1,5 @@
 <%
+
   credits = [
     {
       role: "Utpatti-Karta",
@@ -33,10 +34,10 @@
   stack = [
     { key: "backend",    value: "Ruby on Rails 8",                 note: "MVC architecture · ActiveRecord ORM · convention over configuration" },
     { key: "frontend",   value: "Hotwire (Turbo + Stimulus)",  note: "SPA-like navigation without the JS overhead" },
-    { key: "styling",    value: "Tailwind CSS",                  note: "Utility-first · custom design tokens · zero dead CSS" },
-    { key: "auth",       value: "Devise",                        note: "Session management · secure sign-in/out flows" },
-    { key: "storage",    value: "Active Storage",                note: "Artwork uploads · avatar management · variant processing" },
-    { key: "database",   value: "PostgreSQL",                    note: "Relational data · full-text search · production-ready" },
+    { key: "styling",    value: "Tailwind CSS",                 note: "Utility-first · custom design tokens · zero dead CSS" },
+    { key: "auth",       value: "Devise",                       note: "Session management · secure sign-in/out flows" },
+    { key: "storage",    value: "Active Storage",               note: "Artwork uploads · avatar management · variant processing" },
+    { key: "database",   value: "PostgreSQL",                   note: "Relational data · full-text search · production-ready" },
     { key: "typography", value: "Cormorant Garamond + DM Mono", note: "Display serif paired with technical monospace" }
   ]
 
@@ -58,8 +59,8 @@
     "This project started with a simple idea: artists deserve a space built",
     "with the same care they put into their work — not a generic template.",
     "",
-    "People often appreciate the artwork more than the effort and the hands",
-    "that made the masterpiece. This space is built to honor both.",
+    "Every detail here, from the typography to the interactions, was chosen",
+    "with that in mind. It's built to grow with whoever uses it.",
     "",
     "— Saurabh Kumar, Developer"
   ]
@@ -809,13 +810,13 @@
   function renderWhoami() {
     var card = [
       '┌─────────────────────────────────────────────────────────┐',
-      '│ Saurabh Kumar                                           │',
-      '│ software engineer · "Karta-Dharta" of this space        │',
+      '│ Saurabh Kumar                                      │',
+      '│ software engineer · "Karta-Dharta" of this space   │',
       '├─────────────────────────────────────────────────────────┤',
-      '│ role      Generation-Operation-Destruction              │',
-      '│ stack     Chaku, Khanjar, Bandook, Bomb                 │',
-      '│ focus     maksad sirf ek hai.. PAISA                    │',
-      '│ status    Single                                        │',
+      '│ role      Generation-Operation-Destruction         │',
+      '│ stack     Chaku, Khanjar, Bandook, Bomb            │',
+      '│ focus     maksad sirf ek hai.. PAISA               │',
+      '│ status    Single                                   │',
       '└─────────────────────────────────────────────────────────┘'
     ];
     card.forEach(function (l) { appendLine(l, 'dim'); });
@@ -1041,7 +1042,7 @@
       } else if (matches.length > 1) {
         queue = queue.then(function () {
           appendLine(input.value, 'cmd');
-          appendLine(matches.join('    '), 'dim');
+          appendLine(matches.join('   '), 'dim');
           appendSpacer();
         });
       }

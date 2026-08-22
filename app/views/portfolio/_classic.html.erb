@@ -34,7 +34,7 @@
   <% if @artworks.any? %>
     <div class="masonry">
       <% @artworks.each do |artwork| %>
-        <%= link_to portfolio_artwork_path(artwork.slug), class: "masonry-item" do %>
+        <%= link_to (params[:user_hash].present? ? public_portfolio_artwork_path(params[:user_hash], artwork.slug) : portfolio_artwork_path(artwork.slug)), class: "masonry-item" do %>
           <div class="art-card">
             <% if artwork.images.attached? %>
               <%= image_tag artwork.images.first, class: "artwork-frame" %>
