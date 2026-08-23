@@ -54,6 +54,13 @@
             </div>
           <% end %>
         <% end %>
+        <% if @artwork.images.attached? %>
+          <div style="margin-top: 1.5rem;">
+            <button onclick="openWallPreview('<%= url_for(@artwork.images.first) %>')" class="sr-back-btn" style="width: 100%; justify-content: center; background: transparent; cursor: pointer;">
+              VIEW ON WALL
+            </button>
+          </div>
+        <% end %>
       </div>
       <div class="sr-detail-text">
         <div class="sr-section-label">
