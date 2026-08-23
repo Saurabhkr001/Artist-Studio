@@ -34,6 +34,7 @@ class Artwork < ApplicationRecord
   validates :title, presence: true
   validates :slug, presence: true, uniqueness: true
   validate :at_least_one_image, on: :create
+  validate :dates_cannot_be_in_the_future
 
   before_validation :generate_slug, on: :create
 
@@ -57,6 +58,17 @@ class Artwork < ApplicationRecord
       n += 1
     end
     self.slug = candidate
+  end
+
+  
+  def dates_cannot_be_in_the_future
+    if painted_on.present? && painted_on > Date.today
+      errors.add(:painted_on, "can't be in the future")
+    end
+    
+    if year_created.present? && year_created > Date.today.year
+      errors.add(:year_created, "can't be in the future")
+    end
   end
 
   def at_least_one_image
