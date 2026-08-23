@@ -25,6 +25,13 @@
             <% end %>
           </div>
         <% end %>
+        <% if @artwork.images.attached? %>
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <button onclick="openWallPreview('<%= url_for(@artwork.images.first) %>')" class="sx-chip" style="background: none; border-color: #ff4d4d; color: #ff4d4d; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 100%; transition: all 0.2s;" onmouseover="this.style.background='#ff4d4d';this.style.color='#0f0e0d';" onmouseout="this.style.background='none';this.style.color='#ff4d4d';">
+              VIEW ON WALL
+            </button>
+          </div>
+        <% end %>
       <% end %>
     </div>
 
