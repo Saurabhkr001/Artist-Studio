@@ -2,20 +2,25 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: saurabhkr001
-  password: <%= ENV.fetch("DB_PASSWORD") { "suryaOPKING1" } %>
-  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 development:
   <<: *default
   database: studio_development
+  username: saurabhkr001
+  password: <%= ENV["DB_PASSWORD"] %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 test:
   <<: *default
   database: studio_test
+  username: saurabhkr001
+  password: <%= ENV["DB_PASSWORD"] %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 production:
   <<: *default
-  database: studio_production
-  username: <%= ENV["DB_USERNAME"] %>
-  password: <%= ENV["DB_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
+
+cable:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
