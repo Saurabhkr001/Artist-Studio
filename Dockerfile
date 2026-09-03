@@ -6,6 +6,8 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
+RUN ruby -v && ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
+
 # Runtime packages
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
@@ -66,4 +68,4 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 EXPOSE 80
 
-CMD ["./bin/thrust", "./bin/rails", "server"]
+CMD ["sh", "-c", "ruby -v && bundle exec ruby -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION' && ./bin/thrust ./bin/rails server"]
