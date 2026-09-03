@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+if [[ "$*" == *"./bin/rails server"* ]]; then
   echo "==> Preparing primary database..."
   ./bin/rails db:prepare
 
@@ -8,4 +8,4 @@ if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails solid:prepare_databases
 fi
 
-exec "${@}"
+exec "$@"
