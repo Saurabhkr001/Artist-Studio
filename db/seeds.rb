@@ -1,19 +1,12 @@
-puts "Clearing existing data..."
-StudioNote.destroy_all
-ArtworkLocation.destroy_all
-Artwork.destroy_all
-User.destroy_all
-
-puts "Creating artist account..."
-user = User.create!(
-  name: "Aadisha",
-  email: "aadisha@gmail.com",    # ← replace with his real email
-  password: "123456789",                # ← he changes this on first login
-  password_confirmation: "changeme123",
-  artist_statement: "As an artist, I explore the intersection of light, emotion, and the natural world. My work is an ongoing dialogue with my surroundings, aiming to capture the ephemeral moments of beauty in everyday life. Through my paintings, I invite the viewer to pause, reflect, and find their own narrative within the textures and colors on the canvas."
-)
-
-puts "Creating artworks..."
+puts "Setting up artist account..."
+user = User.find_or_initialize_by(email: "aadisha@gmail.com")
+user.name = "Aadisha"
+user.artist_statement = "As an artist, I explore the intersection of light, emotion, and the natural world. My work is an ongoing dialogue with my surroundings, aiming to capture the ephemeral moments of beauty in everyday life. Through my paintings, I invite the viewer to pause, reflect, and find their own narrative within the textures and colors on the canvas."
+if user.new_record?
+  user.password = "changeme123"
+  user.password_confirmation = "changeme123"
+end
+user.save!
 
 artworks = [
   {
@@ -49,17 +42,22 @@ artworks = [
   # Add more here — copy the block above for each painting
 ]
 
-artworks.each do |attrs|
-  artwork = user.artworks.new(attrs)
-  # Images: attach like this once you have files ready:
-  # artwork.images.attach(
-  #   io: File.open(Rails.root.join("db/seeds/images/painting_one.jpg")),
-  #   filename: "painting_one.jpg",
-  #   content_type: "image/jpeg"
-  # )
-  artwork.save!
-  puts "  ✓ #{artwork.title}"
+if user.artworks.none?
+  puts "Creating starter artworks..."
+  artworks.each do |attrs|
+    artwork = user.artworks.new(attrs)
+    # Images: attach like this once you have files ready:
+    # artwork.images.attach(
+    #   io: File.open(Rails.root.join("db/seeds/images/painting_one.jpg")),
+    #   filename: "painting_one.jpg",
+    #   content_type: "image/jpeg"
+    # )
+    artwork.save!
+    puts "  ✓ #{artwork.title}"
+  end
+else
+  puts "Artworks already exist, skipping."
 end
 
-puts "\nDone! #{Artwork.count} artworks created."
-puts "Login: #{user.email} / changeme123"
+puts "\nDone! #{user.artworks.count} artworks total."
+puts "Login: #{user.email} / changeme123 (if newly created)"
