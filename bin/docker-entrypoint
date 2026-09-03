@@ -1,8 +1,43 @@
 #!/bin/bash -e
 
-# If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+
+  # Prepare the main application database
   ./bin/rails db:prepare
+
+  # Prepare Solid Cache database
+  ./bin/rails runner '
+    cache_config = ActiveRecord::Base.configurations.configs_for(env_name: "production", name: "cache").configuration_hash
+
+    ActiveRecord::Base.establish_connection(cache_config)
+
+    unless ActiveRecord::Base.connection.table_exists?("solid_cache_entries")
+      load Rails.root.join("db/cache_schema.rb")
+    end
+  '
+
+  # Prepare Solid Queue database
+  ./bin/rails runner '
+    queue_config = ActiveRecord::Base.configurations.configs_for(env_name: "production", name: "queue").configuration_hash
+
+    ActiveRecord::Base.establish_connection(queue_config)
+
+    unless ActiveRecord::Base.connection.table_exists?("solid_queue_jobs")
+      load Rails.root.join("db/queue_schema.rb")
+    end
+  '
+
+  # Prepare Solid Cable database
+  ./bin/rails runner '
+    cable_config = ActiveRecord::Base.configurations.configs_for(env_name: "production", name: "cable").configuration_hash
+
+    ActiveRecord::Base.establish_connection(cable_config)
+
+    unless ActiveRecord::Base.connection.table_exists?("solid_cable_messages")
+      load Rails.root.join("db/cable_schema.rb")
+    end
+  '
+
 fi
 
 exec "${@}"
