@@ -38,6 +38,10 @@ class Artwork < ApplicationRecord
 
   before_validation :generate_slug, on: :create
 
+  def to_param
+    slug
+  end
+
   scope :publicly_visible, -> { where(is_public: true) }
   scope :this_day_in_studio, -> {
     where(

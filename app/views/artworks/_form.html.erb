@@ -55,7 +55,7 @@
     <%= f.label :title, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;" %>
     <%= f.text_field :title,
         placeholder: "Untitled (but give it a name)",
-        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;" %>
   </div>
 
   <%# ---- MEDIUM + DIMENSIONS ---- %>
@@ -64,13 +64,13 @@
       <%= f.label :medium, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;" %>
       <%= f.text_field :medium,
           placeholder: "Oil on canvas",
-          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;" %>
     </div>
     <div>
       <%= f.label :dimensions_cm, "Dimensions (cm)", style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;" %>
       <%= f.text_field :dimensions_cm,
           placeholder: "60 × 80",
-          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;" %>
     </div>
   </div>
 
@@ -81,13 +81,13 @@
       <%= f.number_field :year_created,
           max: Date.today.year,
           placeholder: Date.today.year,
-          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;" %>
     </div>
     <div>
       <%= f.label :painted_on, "Date Painted", style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;" %>
       <%= f.date_field :painted_on,
           max: Date.today,
-          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;" %>
+          style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;" %>
     </div>
   </div>
 
@@ -97,7 +97,7 @@
     <%= f.select :status,
         Artwork.statuses.keys.map { |s| [s.humanize, s] },
         {},
-        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;" %>
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;" %>
   </div>
 
   <%# ---- DESCRIPTION ---- %>
@@ -105,7 +105,7 @@
     <%= f.label :description, style: "display:block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:#5f4d3fff;margin-bottom:0.5rem;" %>
     <%= f.text_area :description, rows: 4,
         placeholder: "Notes about this piece, inspiration, context...",
-        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
+        style: "width:100%;background:#1a1612;border:1px solid #2a251e;border-radius:6px;padding:0.75rem 1rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:max(0.85rem, 16px);font-size:0.85rem;outline:none;resize:vertical;line-height:1.7;" %>
   </div>
 
   <%# ---- PUBLIC TOGGLE ---- %>

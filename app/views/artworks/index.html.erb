@@ -1,18 +1,23 @@
 <div style="display:flex;flex-direction:column;gap:2rem;">
 
   <%# ---- HEADER ---- %>
-  <div class="fade-in-up" style="display:flex;align-items:flex-start;justify-content:space-between;">
+  <div class="fade-in-up" style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem;">
     <div>
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-style:italic;font-weight:300;color:#f0e6d3;">
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2.5rem);font-style:italic;font-weight:300;color:#f0e6d3;">
         All Works
       </h1>
       <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#5a4e3a;margin-top:0.25rem;letter-spacing:0.05em;">
         <%= @pagy.count %> paintings in your studio
       </p>
     </div>
-    <%= link_to "↓ Export Catalogue", catalogue_artworks_path + ".pdf",
-        class: "btn-outline",
-        style: "text-decoration:none;display:inline-block;" %>
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+      <%= link_to "+ Add Artwork", new_artwork_path,
+          class: "btn-add-artwork font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2",
+          style: "text-decoration:none;display:inline-flex;align-items:center;min-height:44px;" %>
+      <%= link_to "↓ Export", catalogue_artworks_path + ".pdf",
+          class: "btn-outline",
+          style: "text-decoration:none;display:inline-flex;align-items:center;min-height:44px;" %>
+    </div>
   </div>
 
   <%# ---- TOOLBAR ---- %>
@@ -25,12 +30,12 @@
           name="q[title_or_medium_cont]"
           value="<%= params.dig(:q, :title_or_medium_cont) %>"
           placeholder="Search title, medium..."
-          style="width:220px;background:#1a1612;border:1px solid #2a251e;border-radius:4px;padding:0.45rem 0.8rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;transition:border-color 0.2s;" />
+          style="flex:1;min-width:140px;background:#1a1612;border:1px solid #2a251e;border-radius:4px;padding:0.55rem 0.8rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;transition:border-color 0.2s;-webkit-appearance:none;" />
         <input type="number"
           name="q[year_created_eq]"
           value="<%= params.dig(:q, :year_created_eq) %>"
           placeholder="Year"
-          style="width:75px;background:#1a1612;border:1px solid #2a251e;border-radius:4px;padding:0.45rem 0.65rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;transition:border-color 0.2s;" />
+          style="width:72px;background:#1a1612;border:1px solid #2a251e;border-radius:4px;padding:0.55rem 0.65rem;color:#f0e6d3;font-family:'DM Mono',monospace;font-size:0.72rem;outline:none;transition:border-color 0.2s;-webkit-appearance:none;" />
         <button type="submit" class="btn-primary" style="padding:0.45rem 0.9rem;">
           Search
         </button>

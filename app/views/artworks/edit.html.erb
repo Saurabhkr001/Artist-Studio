@@ -1,7 +1,26 @@
 <div class="max-w-2xl mx-auto">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-stone-900">Edit Artwork</h1>
-    <p class="text-stone-500 mt-1"><%= @artwork.title %></p>
+
+  <%# ---- BACK LINK ---- %>
+  <%= link_to artworks_path,
+      style: "display:inline-flex;align-items:center;gap:0.4rem;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:#5a4e3a;text-decoration:none;transition:color 0.2s;margin-bottom:2rem;",
+      onmouseover: "this.style.color='#c4933f'",
+      onmouseout: "this.style.color='#5a4e3a'" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    All Works
+  <% end %>
+
+  <%# ---- HEADER ---- %>
+  <div class="fade-in-up" style="margin-bottom:2rem;">
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2.5rem);font-style:italic;font-weight:300;color:#f0e6d3;line-height:1;">
+      Edit Artwork
+    </h1>
+    <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#5a4e3a;margin-top:0.4rem;letter-spacing:0.1em;">
+      <%= @artwork.title %>
+    </p>
   </div>
-  <%= render "form", artwork: @artwork %>
+
+  <div class="glass-card fade-in-up" style="padding:1.5rem;">
+    <%= render "form", artwork: @artwork %>
+  </div>
+
 </div>

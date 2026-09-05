@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title><%= @artwork.title %> — <%= @user.display_name %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500;700&family=Barlow+Condensed:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -268,6 +268,16 @@
     }
     @media(hover:none){
       #raw-cursor,#raw-cursor-cross{display:none!important;}
+    }
+
+    @media (max-width: 768px) {
+      .show-2col { grid-template-columns: 1fr !important; gap: 2rem !important; }
+      .show-main { padding: 1.5rem 1rem !important; }
+      .show-title { font-size: clamp(1.5rem,6vw,3rem) !important; }
+      .spec-strip { grid-template-columns: repeat(2,1fr) !important; }
+    }
+    @media (max-width: 480px) {
+      .spec-strip { grid-template-columns: 1fr !important; }
     }
   </style>
 </head>

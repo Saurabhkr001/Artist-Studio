@@ -2,7 +2,7 @@
 <html lang="en" class="h-full">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="turbo-cache-control" content="no-preview">
     <title>The Studio</title>
     <%= csrf_meta_tags %>
@@ -80,65 +80,279 @@
         height: 2px;
         background: linear-gradient(90deg, #c4933f, #f0d080);
       }
+
+      /* ── MOBILE HAMBURGER ── */
+      .mobile-menu-btn {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        -webkit-tap-highlight-color: transparent;
+        border-radius: 8px;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .mobile-menu-btn:hover { background: rgba(196,147,63,0.08); }
+      .mobile-menu-btn span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #a89880;
+        border-radius: 1px;
+        transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        transform-origin: center;
+        pointer-events: none;
+      }
+      .mobile-menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: #c4933f; }
+      .mobile-menu-btn.open span:nth-child(2) { transform: scaleX(0); opacity: 0; }
+      .mobile-menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: #c4933f; }
+
+      /* ── MOBILE DRAWER ── */
+      .mobile-nav-drawer {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 998;
+        background: rgba(22,19,15,0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid #2a251e;
+        transform: translateY(-110%);
+        transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        overflow-y: auto;
+        max-height: 100dvh;
+      }
+      .mobile-nav-drawer.open { transform: translateY(0); }
+      .mobile-nav-drawer .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid rgba(42,37,30,0.8);
+      }
+      .mobile-nav-drawer .drawer-inner {
+        padding: 0.75rem 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+      .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #8a7a65;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        min-height: 44px;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-nav-link:hover, .mobile-nav-link.active {
+        color: #f0e6d3;
+        background: rgba(196,147,63,0.07);
+      }
+      .mobile-nav-link.active { color: #c4933f; }
+      .mobile-nav-divider {
+        height: 1px;
+        background: rgba(42,37,30,0.6);
+        margin: 0.5rem 0;
+      }
+      .mobile-nav-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 997;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+      }
+      .mobile-nav-backdrop.open { display: block; }
+
+      @media (max-width: 768px) {
+        .mobile-menu-btn { display: flex !important; }
+        .mobile-nav-drawer { display: block; }
+        .nav-desktop-links { display: none !important; }
+        .nav-desktop-right { display: none !important; }
+      }
+
+      @supports (padding: max(0px)) {
+        .mobile-nav-drawer .drawer-header {
+          padding-top: max(1rem, env(safe-area-inset-top));
+        }
+      }
     </style>
   </head>
 
   <body class="h-full bg-canvas font-sans antialiased">
 
     <% if user_signed_in? %>
-      <nav class="nav-animated bg-canvas2 border-b border-canvas3 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between gap-4 min-w-0">
-        <div class="flex flex-wrap items-center gap-4 md:gap-10 min-w-0">
-          <%= link_to root_path, class: "font-display text-2xl italic text-cream whitespace-nowrap flex-shrink-0" do %>
-            The Studio
+      <% unread_count = current_user.enquiries.where(read: false).count %>
+
+      <%# Mobile backdrop %>
+      <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" onclick="closeMobileMenu()"></div>
+
+      <%# Mobile drawer %>
+      <div class="mobile-nav-drawer" id="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Navigation">
+        <div class="drawer-header">
+          <%= link_to root_path, class: "font-display text-xl italic text-cream" do %>The Studio<% end %>
+          <button class="mobile-menu-btn open" id="mobile-drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+        <div class="drawer-inner">
+          <%= link_to artworks_path,
+              class: "mobile-nav-link #{controller_name == 'artworks' && action_name == 'index' ? 'active' : ''}",
+              onclick: "closeMobileMenu()" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            All Works
           <% end %>
-          
-          <div class="flex flex-wrap items-center gap-4 md:gap-6">
-            <%= link_to "All Works", artworks_path,
-                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'artworks' && action_name == 'index' ? 'nav-link-active' : ''}" %>
-            <%= link_to "Analytics", analytics_path,
-                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'home' && action_name == 'analytics' ? 'nav-link-active' : ''}" %>
-                        <% unread_count = current_user.enquiries.where(read: false).count %>
-            <%= link_to enquiries_path, class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'enquiries' ? 'nav-link-active' : ''}" do %>
-              Enquiries
-              <% if unread_count > 0 %>
-                <span style="background: #a83232; color: #fff; padding: 0.1rem 0.35rem; border-radius: 999px; margin-left: 0.2rem; font-size: 0.55rem; font-weight: bold;"><%= unread_count %></span>
-              <% end %>
+          <%= link_to analytics_path,
+              class: "mobile-nav-link #{controller_name == 'home' && action_name == 'analytics' ? 'active' : ''}",
+              onclick: "closeMobileMenu()" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            Analytics
+          <% end %>
+          <%= link_to enquiries_path,
+              class: "mobile-nav-link #{controller_name == 'enquiries' ? 'active' : ''}",
+              onclick: "closeMobileMenu()" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Enquiries
+            <% if unread_count > 0 %><span style="background:#a83232;color:#fff;padding:0.15rem 0.45rem;border-radius:999px;font-size:0.6rem;font-weight:bold;margin-left:auto;"><%= unread_count %></span><% end %>
+          <% end %>
+          <%= link_to portfolio_path, class: "mobile-nav-link", target: "_blank", onclick: "closeMobileMenu()" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Portfolio &#x2197;
+          <% end %>
+          <div class="mobile-nav-divider"></div>
+          <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;">
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar.variant(resize_to_fill: [64,64]), class: "w-10 h-10 flex-shrink-0 rounded-full object-cover border border-stone-600" %>
+            <% else %>
+              <div class="w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center border border-stone-700" style="background:#1a1612;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a4e3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
+              </div>
             <% end %>
-            <%= link_to "Portfolio ↗", portfolio_path,
-                class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap",
-                target: "_blank" %>
+            <div style="flex:1;min-width:0;">
+              <p style="font-family:'DM Mono',monospace;font-size:0.7rem;color:#f0e6d3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><%= current_user.display_name %></p>
+              <p style="font-family:'DM Mono',monospace;font-size:0.6rem;color:#5a4e3a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><%= current_user.email %></p>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.5rem;padding:0 1rem 0.5rem;">
+            <%= link_to "Edit Profile", edit_profile_path, class: "mobile-nav-link", style: "flex:1;justify-content:center;", onclick: "closeMobileMenu()" %>
+            <%= link_to "Sign Out", destroy_user_session_path,
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to sign out?", confirm_button_text: "Sign Out" },
+                class: "mobile-nav-link", style: "flex:1;justify-content:center;color:#7a3030;" %>
+          </div>
+          <div class="mobile-nav-divider"></div>
+          <%= link_to new_artwork_path, class: "mobile-nav-link", onclick: "closeMobileMenu()" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c4933f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span style="color:#c4933f;">Add Artwork</span>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Main nav bar %>
+      <nav class="nav-animated bg-canvas2 border-b border-canvas3" style="position:sticky;top:0;z-index:999;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;height:60px;max-width:1280px;margin:0 auto;gap:1rem;">
+          <div style="display:flex;align-items:center;gap:2rem;min-width:0;flex:1;">
+            <%= link_to root_path, class: "font-display text-2xl italic text-cream whitespace-nowrap flex-shrink-0" do %>
+              The Studio
+            <% end %>
+            <div class="nav-desktop-links" style="display:flex;align-items:center;gap:1.5rem;">
+              <%= link_to "All Works", artworks_path,
+                  class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'artworks' && action_name == 'index' ? 'nav-link-active' : ''}" %>
+              <%= link_to "Analytics", analytics_path,
+                  class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'home' && action_name == 'analytics' ? 'nav-link-active' : ''}" %>
+              <%= link_to enquiries_path,
+                  class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap relative #{controller_name == 'enquiries' ? 'nav-link-active' : ''}" do %>
+                Enquiries
+                <% if unread_count > 0 %>
+                  <span style="background:#a83232;color:#fff;padding:0.1rem 0.35rem;border-radius:999px;margin-left:0.2rem;font-size:0.55rem;font-weight:bold;"><%= unread_count %></span>
+                <% end %>
+              <% end %>
+              <%= link_to "Portfolio \u2197", portfolio_path,
+                  class: "font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap",
+                  target: "_blank" %>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;flex-shrink:0;">
+            <div class="nav-desktop-right" style="display:flex;align-items:center;gap:1rem;">
+              <%= link_to "+ Add Artwork", new_artwork_path,
+                  class: "btn-add-artwork font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas whitespace-nowrap" %>
+              <div style="height:24px;width:1px;background:#2a251e;"></div>
+              <%= link_to edit_profile_path, class: "avatar-wrap flex items-center gap-2" do %>
+                <% if current_user.avatar.attached? %>
+                  <%= image_tag current_user.avatar.variant(resize_to_fill: [64,64]),
+                      class: "w-8 h-8 flex-shrink-0 rounded-full object-cover border border-stone-600 ring-1 ring-stone-700" %>
+                <% else %>
+                  <div class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center border border-stone-600" style="background:#1a1612;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a4e3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
+                  </div>
+                <% end %>
+              <% end %>
+              <%= link_to "Sign Out", destroy_user_session_path,
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to sign out?", confirm_button_text: "Sign Out" },
+                  class: "font-mono text-xs uppercase tracking-widest text-stone-600 hover:text-cream transition-colors whitespace-nowrap" %>
+            </div>
+
+            <div id="mobile-quick-actions" style="display:none;align-items:center;gap:0.5rem;">
+              <% if unread_count > 0 %>
+                <%= link_to enquiries_path, style: "position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:#a89880;text-decoration:none;-webkit-tap-highlight-color:transparent;" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#a83232;border:1.5px solid #1a1612;"></span>
+                <% end %>
+              <% end %>
+              <%= link_to new_artwork_path, title: "Add Artwork",
+                  style: "display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;background:rgba(196,147,63,0.1);border:1px solid rgba(196,147,63,0.4);color:#c4933f;text-decoration:none;font-size:1.25rem;-webkit-tap-highlight-color:transparent;" do %>+<% end %>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="openMobileMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+              <span></span><span></span><span></span>
+            </button>
           </div>
         </div>
-
-        <div class="flex flex-wrap items-center gap-4 md:gap-6 flex-shrink-0">
-          <%= link_to "+ Add Artwork", new_artwork_path,
-              class: "btn-add-artwork font-mono text-xs uppercase tracking-widest border border-ochre text-ochre px-4 py-2 hover:bg-ochre hover:text-canvas whitespace-nowrap" %>
-          
-          <div class="hidden sm:block h-6 w-px bg-stone-800"></div>
-          
-          <%= link_to edit_profile_path,
-              class: "avatar-wrap flex items-center gap-2.5 font-mono text-xs uppercase tracking-widest text-stone-500 hover:text-cream transition-colors whitespace-nowrap" do %>
-            <% if current_user.avatar.attached? %>
-              <%= image_tag current_user.avatar.variant(resize_to_fill: [64, 64]),
-                            class: "w-8 h-8 flex-shrink-0 rounded-full object-cover border border-stone-600 ring-1 ring-stone-700" %>
-          <% else %>
-            <div class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center border border-stone-600 ring-1 ring-stone-700 bg-stone-900" style="background: #1a1612 !important;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/>
-                <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>
-              </svg>
-            </div>
-            <% end %>
-          <% end %>
-
-          <%= link_to "Sign Out", destroy_user_session_path,
-              data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to sign out?", confirm_button_text: "Sign Out" },
-              class: "font-mono text-xs uppercase tracking-widest text-stone-600 hover:text-cream transition-colors whitespace-nowrap" %>
-        </div>
       </nav>
+
+      <script>
+        (function() {
+          var qa = document.getElementById('mobile-quick-actions');
+          function syncMobile() { qa.style.display = window.innerWidth <= 768 ? 'flex' : 'none'; }
+          syncMobile();
+          window.addEventListener('resize', syncMobile);
+        })();
+        function openMobileMenu() {
+          document.getElementById('mobile-nav-drawer').classList.add('open');
+          document.getElementById('mobile-nav-backdrop').classList.add('open');
+          var btn = document.getElementById('mobile-menu-btn');
+          btn.classList.add('open'); btn.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        }
+        function closeMobileMenu() {
+          document.getElementById('mobile-nav-drawer').classList.remove('open');
+          document.getElementById('mobile-nav-backdrop').classList.remove('open');
+          var btn = document.getElementById('mobile-menu-btn');
+          btn.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) { if(e.key==='Escape') closeMobileMenu(); });
+      </script>
     <% end %>
 
     <% if notice.present? %>
+
       <div id="toast-wrap" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;pointer-events:none;">
         <div id="toast" style="
           pointer-events:all;
@@ -320,11 +534,11 @@
         <%= yield %>
       </main>
     <% else %>
-      <main class="max-w-7xl mx-auto px-8 py-12">
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12">
         <%= yield %>
       </main>
 
-      <footer class="mt-24 border-t border-canvas3 px-8 py-10 text-center font-mono text-xs text-stone-600">
+      <footer class="mt-12 sm:mt-24 border-t border-canvas3 px-4 sm:px-8 py-8 sm:py-10 text-center font-mono text-xs text-stone-600">
         <div class="divider-ochre mb-6" style="max-width:200px;margin-left:auto;margin-right:auto;"></div>
         Built with keys not with brush, questionable taste, and too many commits.
         <br>
@@ -339,8 +553,8 @@
       border:1px solid #2e2920;
       border-radius:4px 20px 20px 20px;
       padding:0;
-      max-width:320px;
-      width:calc(100% - 2rem);
+      max-width:340px;
+      width:calc(100% - 2.5rem);
       margin:auto;
       box-shadow:0 24px 60px rgba(0,0,0,0.7), 0 0 40px rgba(196,147,63,0.05);
       outline:none;

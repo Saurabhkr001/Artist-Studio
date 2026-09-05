@@ -2,7 +2,7 @@
 <html lang="en" id="html-root">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -45,7 +45,7 @@
     body.creative .slider-pill { background: #ff4d4d; }
 
     /* ══ CLASSIC NAV ══ */
-    nav{position:sticky;top:0;z-index:50;background:rgba(10,9,7,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;transition:all 0.5s ease;}
+    nav{position:sticky;top:0;z-index:50;background:rgba(10,9,7,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;transition:all 0.5s ease;}
     .nav-name{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.15rem;font-style:italic;font-weight:300;}
     .nav-links{display:flex;gap:2rem;align-items:center;}
     .nav-links a{font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;}
@@ -100,7 +100,7 @@
     .tag-search-option:hover,.tag-search-option.highlight{background:rgba(184,134,46,0.12);color:var(--gold);}
     .tag-search-option-hash{color:var(--gold);margin-right:2px;}
     .tag-search-empty{padding:0.6rem 0.8rem;font-family:"DM Mono",monospace;font-size:0.55rem;color:var(--dimmed);letter-spacing:0.1em;font-style:italic;}
-    .classic-grid-wrap{max-width:1300px;margin:0 auto;padding:3rem;}
+    .classic-grid-wrap{max-width:1300px;margin:0 auto;padding:2rem 1.5rem;}
     .masonry{columns:2;column-gap:1.5rem;}
     @media(min-width:768px){.masonry{columns:3;}}
     @media(min-width:1100px){.masonry{columns:4;}}
@@ -120,7 +120,7 @@
     @media(hover:none){.art-overlay{display:none;}.card-caption{opacity:1;}}
     .available-pill{display:inline-flex;align-items:center;gap:5px;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);margin-top:0.5rem;}
     .available-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
-    .about-section{border-top:1px solid var(--border);padding:6rem 3rem;max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;}
+    .about-section{border-top:1px solid var(--border);padding:5rem 2rem;max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
     .classic-footer{border-top:1px solid var(--border);padding:3rem;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;max-width:1300px;margin:0 auto;}
 
     /* ══════════════════════════════════════════════
@@ -230,7 +230,7 @@
     @keyframes marqueeScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
     /* ── RAW GRID ── */
-    .raw-grid-section{padding:4rem 3rem;max-width:1400px;margin:0 auto;}
+    .raw-grid-section{padding:4rem 1.5rem;max-width:1400px;margin:0 auto;}
     .raw-section-header{display:flex;align-items:baseline;gap:2rem;margin-bottom:3rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.06);}
     .raw-section-num{font-family:"Barlow Condensed",sans-serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,0.05);line-height:1;letter-spacing:-0.04em;}
     .raw-section-title{font-family:"Barlow Condensed",sans-serif;font-size:1.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.7);}
@@ -307,6 +307,9 @@
     }
 
     @media(max-width:600px){
+      nav{padding:0.875rem 1.25rem!important;}
+      .nav-links{gap:1rem!important;}
+      .tag-search-input{width:80px;}
       .raw-hero-sub{flex-direction:column;gap:1.5rem;}
       .classic-footer{grid-template-columns:1fr;gap:0.75rem;text-align:center;}
       .classic-hero{padding:4rem 1.5rem 3rem;}

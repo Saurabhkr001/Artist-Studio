@@ -1,6 +1,84 @@
+<style>
+  .portfolio-mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 8px;
+    padding: 4px;
+    transition: background 0.2s;
+  }
+  .portfolio-mobile-menu-btn span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: var(--muted, #6a5e4e);
+    border-radius: 1px;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    transform-origin: center;
+    pointer-events: none;
+  }
+  .portfolio-mobile-menu-btn.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: var(--gold, #b8862e); }
+  .portfolio-mobile-menu-btn.open span:nth-child(2) { transform: scaleX(0); opacity: 0; }
+  .portfolio-mobile-menu-btn.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--gold, #b8862e); }
+
+  @media (max-width: 768px) {
+    .portfolio-mobile-menu-btn { display: flex; }
+    .nav-links {
+      display: none !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(10,9,7,0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border2, #2a2520);
+      flex-direction: column !important;
+      padding: 4rem 1.5rem 2rem !important;
+      gap: 0.25rem !important;
+      align-items: stretch !important;
+      transform: translateY(-110%);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .nav-links.mobile-open {
+      display: flex !important;
+      transform: translateY(0) !important;
+    }
+    .nav-links a {
+      padding: 0.875rem 1rem !important;
+      min-height: 44px !important;
+      display: flex !important;
+      align-items: center !important;
+      border-radius: 8px;
+      font-size: 0.72rem !important;
+      letter-spacing: 0.12em !important;
+    }
+    .nav-links a:hover { background: rgba(184,134,46,0.08); }
+    .mode-slider {
+      width: 100% !important;
+      justify-content: space-around;
+      margin-top: 0.5rem;
+    }
+    .tag-search-wrap { width: 100%; }
+    .tag-search-input-wrap { width: 100%; }
+    .tag-search-input { width: 100% !important; flex: 1; }
+    .tag-search-dropdown { width: 100%; }
+  }
+</style>
 <nav id="main-nav">
   <span class="nav-name"><%= @user.display_name %></span>
-  <div class="nav-links">
+  <button class="portfolio-mobile-menu-btn" id="portfolio-menu-btn" onclick="togglePortfolioMenu()" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="portfolio-nav-links">
     <a href="#works">Works</a>
     <% if @user.artist_statement.present? %>
       <a href="#about">About</a>
@@ -53,6 +131,27 @@
 </nav>
 
 <script>
+  // ── PORTFOLIO MOBILE MENU ──
+  function togglePortfolioMenu() {
+    var links = document.getElementById('portfolio-nav-links');
+    var btn = document.getElementById('portfolio-menu-btn');
+    var isOpen = links.classList.toggle('mobile-open');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+  }
+  // Close menu on link click
+  document.addEventListener('click', function(e) {
+    var links = document.getElementById('portfolio-nav-links');
+    var btn = document.getElementById('portfolio-menu-btn');
+    if (links && btn && links.classList.contains('mobile-open')) {
+      if (!links.contains(e.target) && !btn.contains(e.target)) {
+        links.classList.remove('mobile-open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+
   function sharePortfolio(e) {
     e.preventDefault();
     const btn = document.getElementById('share-btn');

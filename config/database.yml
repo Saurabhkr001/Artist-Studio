@@ -7,7 +7,7 @@ development:
   <<: *default
   database: studio_development
   username: saurabhkr001
-  password: <%= ENV["DB_PASSWORD"] %>
+  password: "suryaOPKING1"
   host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
 
 test:

@@ -1,6 +1,12 @@
 <div class="show-classic">
-  <main style="max-width: 1100px; margin: 0 auto; padding: 5rem 2rem;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;">
+  <main style="max-width: 1100px; margin: 0 auto; padding: 4rem 2rem;">
+    <style>
+  @media (max-width: 768px) {
+    .show-classic-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .show-classic main { padding: 2rem 1rem !important; }
+  }
+</style>
+<div class="show-classic-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;">
       <div>
         <% if @artwork.images.attached? %>
           <div style="background: #1a1612; border-radius: 4px; overflow: hidden;">
